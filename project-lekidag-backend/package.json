@@ -1,0 +1,39 @@
+{
+  "name": "project-lekidag-backend",
+  "version": "1.0.0",
+  "description": "Backend for the project LekIdag!",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.lnu.se:1dv613/student/ms228qs/projects/project-lekidag-backend.git"
+  },
+  "keywords": [],
+  "author": "Mathilda Segerlund <ms228qs@student.lnu.se>",
+  "license": "ISC",
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-http-context": "^2.0.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "morgan": "^1.10.0",
+    "winston": "^3.17.0"
+  }
+}

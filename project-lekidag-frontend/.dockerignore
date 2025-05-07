@@ -1,0 +1,12 @@
+# Don't allow anything
+*
+
+# Only allow files needed for build.
+!index.html
+!public
+!src
+!package.json
+!package-lock.json
+!Dockerfile
+!Dockerfile.production
+!vite.config.js

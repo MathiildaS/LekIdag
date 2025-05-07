@@ -1,0 +1,11 @@
+# Don't allow anything
+*
+
+# Only allow files needed for build.
+!src
+!package.json
+!package-lock.json
+!Dockerfile
+!Dockerfile.production
+!.env
+

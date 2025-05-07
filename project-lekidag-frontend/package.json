@@ -1,0 +1,25 @@
+{
+  "name": "project-lekidag-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Frontend for project LekIdag",
+  "type": "module",
+  "browser": "src/js/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode production",
+    "preview": "vite preview",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0",
+    "format": "npx prettier --write ./src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10",
+    "eslint": "^8.57.1",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  }
+}

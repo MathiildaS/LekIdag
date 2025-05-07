@@ -1,0 +1,32 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #fffef9;
+  font-family: Georgia, serif;
+  color: #f5a623;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: #f5a623;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #d48806;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #fffef9;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  a {
+    color: #87cefa;
+  }
+}
