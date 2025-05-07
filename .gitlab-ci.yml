@@ -1,0 +1,52 @@
+image: node:20
+
+stages:
+  - build
+  - test
+  - deploy
+
+# Frontend
+frontend-lint:
+  stage: test
+  script:
+    - cd project-lekidag-frontend
+    - npm ci
+    - npm run lint
+
+frontend-build:
+  stage: build
+  script:
+    - cd project-lekidag-frontend
+    - npm ci
+    - npm run build
+
+# Backend
+backend-lint:
+  stage: test
+  script:
+    - cd project-lekidag-backend
+    - npm ci
+    - npm run lint
+
+backend-tests:
+  stage: test
+  script:
+    - cd project-lekidag-backend
+    - npm ci
+    - npm run test
+
+# Deploy
+deploy-to-cscloud:
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
+    - ssh ubuntu@"$PRODUCTION_HOST" 'cd /var/www/lekidag && git pull && docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build'
+  only:
+    - main
+  when: manual
+  environment:
+    name: production
+    url: https://cscloud8-46.lnu.se

@@ -4,15 +4,19 @@ services:
     ports:
       - "5000:5000" # The port that backend listen to.
     build:
-      context: ../project-lekidag-backend
+      context: ./project-lekidag-backend
       dockerfile: Dockerfile.production # Use production Dockerfile
-    env_file:
-      - ../project-lekidag-backend/.env
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - PORT=5000
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOGGER_MORGAN_FORMAT_ADD_REMOTE=${LOGGER_MORGAN_FORMAT_ADD_REMOTE}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
     command: node src/server.js # Start the backend manually
 
   frontend:
     ports:
       - "3000:80" # NGINX inside container listens on port 80
     build:
-      context: ../project-lekidag-frontend
+      context: ./project-lekidag-frontend
       dockerfile: Dockerfile.production # Build frontend and serve via NGINX

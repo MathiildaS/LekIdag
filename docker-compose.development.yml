@@ -4,18 +4,18 @@ services:
     ports:
       - "5000:5000" # The port that backend listen to.
     volumes:
-      - ../project-lekidag-backend/src:/usr/src/app/src
-      - ../project-lekidag-backend/package.json:/usr/src/app/package.json
-      - ../project-lekidag-backend/package-lock.json:/usr/src/app/package-lock.json
+      - ./project-lekidag-backend/src:/usr/src/app/src
+      - ./project-lekidag-backend/package.json:/usr/src/app/package.json
+      - ./project-lekidag-backend/package-lock.json:/usr/src/app/package-lock.json
     env_file:
-      - ../project-lekidag-backend/.env # Load environment variables from .env
+      - .env
     command: npm run dev # Run backend server
 
   frontend:
     ports:
       - "5173:5173" # Port to Vite.
     volumes:
-      - ../project-lekidag-frontend/src:/usr/src/app/src
-      - ../project-lekidag-frontend/package.json:/usr/src/app/package.json
-      - ../project-lekidag-frontend/package-lock.json:/usr/src/app/package-lock.json
+      - ./project-lekidag-frontend/src:/usr/src/app/src
+      - ./project-lekidag-frontend/package.json:/usr/src/app/package.json
+      - ./project-lekidag-frontend/package-lock.json:/usr/src/app/package-lock.json
     command: npm run dev # Run Vite dev server
