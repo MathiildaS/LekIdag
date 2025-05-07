@@ -10,4 +10,3 @@
 !Dockerfile
 !Dockerfile.production
 !vite.config.js
-!default.conf
