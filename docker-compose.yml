@@ -1,0 +1,15 @@
+# The base file.
+services:
+  backend:
+    container_name: lekidag-backend
+    build:
+      context: ../project-lekidag-backend # Path to the Dockerfile in backend
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+    depends_on:
+      - frontend # Frontend needs to start before backend
+
+  frontend:
+    container_name: lekidag-frontend
+    build:
+      context: ../project-lekidag-frontend # Path to the Dockerfile in frontend
