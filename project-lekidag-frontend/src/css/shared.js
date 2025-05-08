@@ -1,6 +1,13 @@
 export const sharedStyles = `
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&display=swap');
+
   :host {
-    font-family: Georgia, serif;
+    font-family: "DynaPuff", cursive;
+    font-optical-sizing: auto;
+  font-weight: 470;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
     display: block;
     width: 90%;
     margin: 0 auto;
@@ -14,34 +21,46 @@ export const sharedStyles = `
     background-color: #fffef9;
   }
 
+  .buttons button {
+  font-family: "DynaPuff", cursive;
+      font-optical-sizing: auto;
+  font-weight: 470;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+    font-weight: bold;
+  text-transform: uppercase;
+  }
+
   button {
     padding: 0.6rem 1.2rem;
-    background-color: #ffffff;
+    background-color: #fffef9;
     margin: 0.3rem;
-    border: none;
-    border-radius: 8px;
-    color: #f5a623;
+    border: 1px solid #E89E69;
+    border-radius: 12px;
+    color: #E89E69;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
 
   button:hover {
-    background-color: #f5a623;
+    background-color: #F7D5B4;
     color: white;
     transform: scale(1.05);
   }
 
   button:focus {
     outline: none;
-    box-shadow: 0 0 5px #ffffff;
+    box-shadow: 0 0 5px #fffef9;
   }
 
   .instruction {
     white-space: pre-line;
     line-height: 1.6;
     margin-bottom: 2rem;
+    font-size: 1.3rem;
   }
 
   header,
@@ -53,17 +72,17 @@ export const sharedStyles = `
   }
 
   header {
-    background-color: #f5a623;
+    background-color: #FFF5E5;
     padding: 1rem 1rem 2rem 1rem;
-    color: #ffffff;
     position: relative;
     text-align: center;
+    min-height: 230px
   }
 
   footer {
-    background-color: #f5a623;
+    background-color: #FFF5E5;
     padding: 1rem;
-    color: #ffffff;
+    color: #E89E69;
     text-align: center;
     font-size: 0.9rem;
   }
@@ -71,9 +90,9 @@ export const sharedStyles = `
   main {
     flex-grow: 1;
     padding: 2rem;
-    border: 3px solid orange;
+    border: 3px solid #E89E69;
     background-color: #fffef9;
-    color: #f5a623;
+    color: #E89E69;
   }
 
   weather-element {
@@ -84,16 +103,27 @@ export const sharedStyles = `
   }
 
   @media (max-width: 600px) {
-    .buttons {
-      flex-direction: column;
-      align-items: center;
-    }
+  .logga {
+    display: none;
+  }
+  
+    .instruction {
+    font-size: 0.9rem;
+  }
 
-    .buttons button {
-      width: 80%;
-      text-align: center;
-      font-size: 1rem;
-    }
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 0.3rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .buttons button {
+    width: 90%;
+    font-size: 1.05rem;
+    padding: 0.8rem 1.2rem;
+  }
 
     weather-element {
       position: static;
@@ -110,10 +140,15 @@ export const sharedStyles = `
   }
 
   @media (max-width: 400px) {
-    .buttons button {
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-    }
+  .buttons button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .buttons {
+    margin-top: 0.5rem;
+    row-gap: 0.2rem;
+  }
 
     header, footer {
       padding: 0.8rem;

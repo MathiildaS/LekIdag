@@ -4,16 +4,50 @@
  */
 import { sharedStyles } from '../../../css/shared.js'
 import { getUserLocation } from '../../geolocation.js'
+import logga from '../../../images/lekidag.png'
 
 const layoutTemplate = document.createElement('template')
 layoutTemplate.innerHTML = `
 <style>
-${sharedStyles}
+  ${sharedStyles}
+  .logga {
+    position: absolute;
+    top: 0.5rem;
+    left: 6rem;
+    height: 200px;
+    margin-right: 20px;
+    vertical-align: middle;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.1rem;
+    column-gap: 0.4rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .buttons button {
+    padding: 1rem 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+
+  .homepage {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.homepage:hover {
+  transform: scale(1.05);
+}
 </style>
 
 <div class="layout-container">
 <header>
-  <h3>LekIdag!</h3>
+  <img src="${logga}" alt="LekIdag" class="logga homepage" />
   <div class="buttons">
     <button class="game">Slumpa en lek</button>
     <button class="craft">Slumpa ett pyssel</button>
@@ -54,6 +88,7 @@ customElements.define('layout-element',
       this.getGame = this.shadowRoot.querySelector('.game')
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
       this.weather = this.shadowRoot.querySelector('weather-element')
+      this.homepage = this.shadowRoot.querySelector('.homepage')
     }
 
     /**
@@ -95,6 +130,15 @@ customElements.define('layout-element',
       if (this.weather) {
         this.weather.getTheLocation(this.userPosition)
       }
+
+      this.homepage.addEventListener('click', () => {
+        const slot = this.shadowRoot.querySelector('slot')
+        const slottedElement = slot.assignedElements()
+
+        slottedElement.forEach(element => {
+          element.style.display = 'none'
+        })
+      })
     }
 
     /**
