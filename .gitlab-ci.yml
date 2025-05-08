@@ -36,7 +36,7 @@ backend-tests:
     - npm run test
 
 # Deploy
-deploy-to-cscloud:
+deploy:
   stage: deploy
   script:
     - mkdir -p ~/.ssh

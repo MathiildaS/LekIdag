@@ -28,7 +28,7 @@ gamesTemplate.innerHTML = `
 .location p {
   margin-bottom: 1rem;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
   .age-buttons,
@@ -37,13 +37,14 @@ gamesTemplate.innerHTML = `
     gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
+    flex-direction: row;
   }
 
   .game {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    color: #f5a623;
+    color: #E89E69;
   }
 </style>
 <div class="age">
@@ -111,7 +112,7 @@ customElements.define('games-element',
           this.locationContainer.style.display = 'flex'
         }, { signal: this.abortController.signal })
 
-        this.ageContainer.appendChild(ageButton)
+        this.ageButtons.appendChild(ageButton)
       })
 
       // Call the displayGame-method that fetches a game when location is selected.
@@ -125,7 +126,7 @@ customElements.define('games-element',
           this.displayGame()
         }, { signal: this.abortController.signal })
 
-        this.locationContainer.appendChild(locationButton)
+        this.locationButtons.appendChild(locationButton)
       })
 
       // Reshuffle a new game with the same parameters.
@@ -137,8 +138,6 @@ customElements.define('games-element',
       this.start.addEventListener('click', () => {
         this.startPage()
       }, { signal: this.abortController.signal })
-
-      this.displayButtons()
     }
 
     /**
