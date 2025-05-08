@@ -4,16 +4,58 @@
  */
 import { sharedStyles } from '../../../css/shared.js'
 import { getUserLocation } from '../../geolocation.js'
+import logga from '../../../images/lekidag.png'
 
 const layoutTemplate = document.createElement('template')
 layoutTemplate.innerHTML = `
 <style>
-${sharedStyles}
+  ${sharedStyles}
+  .logga {
+    position: absolute;
+    top: 0.5rem;
+    left: 6rem;
+    height: 200px;
+    margin-right: 20px;
+    vertical-align: middle;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.1rem;
+    column-gap: 0.4rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .buttons button {
+    padding: 1rem 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+
+  .homepage {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.homepage:hover {
+  transform: scale(1.05);
+}
+
+.startpage {
+text-align: center;
+}
+
+.startpage h2 {
+text-transform: uppercase;
+}
 </style>
 
 <div class="layout-container">
 <header>
-  <h3>LekIdag!</h3>
+  <img src="${logga}" alt="LekIdag" class="logga homepage" />
   <div class="buttons">
     <button class="game">Slumpa en lek</button>
     <button class="craft">Slumpa ett pyssel</button>
@@ -27,6 +69,20 @@ ${sharedStyles}
   <weather-element></weather-element>
   </header>
   <main>
+    <div class="startpage">
+      <h2>Välkommen till LekIdag!</h2>
+      <p>Idétorka? Aldrig mer! 🌟<br><br>
+Här på LekIdag hittar du inspiration till roliga aktiviteter - perfekt för föräldrar, barnvakter eller barn med spring i benen.<br><br>
+
+Du kan välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
+kolla väderprognosen för att avgöra om det blir inomhusbus eller utomhuslek<br> 
+och anta en spännande utmaning!<br><br>
+Med hjälp av kartan hittar du enkelt lekplatser och badplatser nära dig<br>
+och om du loggar in kan du dessutom dela med dig av egna tips och bilder i vårt forum.<br><br>
+
+Välj något i menyn ovanför för att komma igång. Vem vet vad du hittar på idag? 🎈<br><br>
+Nu kör vi - det är dags att leka!</p>
+    </div>
     <slot></slot>
   </main>
   <footer>
@@ -54,6 +110,8 @@ customElements.define('layout-element',
       this.getGame = this.shadowRoot.querySelector('.game')
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
       this.weather = this.shadowRoot.querySelector('weather-element')
+      this.homepage = this.shadowRoot.querySelector('.homepage')
+      this.startpage = this.shadowRoot.querySelector('.startpage')
     }
 
     /**
@@ -95,6 +153,17 @@ customElements.define('layout-element',
       if (this.weather) {
         this.weather.getTheLocation(this.userPosition)
       }
+
+      this.homepage.addEventListener('click', () => {
+        const slot = this.shadowRoot.querySelector('slot')
+        const slottedElement = slot.assignedElements()
+
+        slottedElement.forEach(element => {
+          element.style.display = 'none'
+        })
+
+        this.startpage.style.display = 'flex'
+      })
     }
 
     /**
@@ -110,6 +179,8 @@ customElements.define('layout-element',
       slottedElement.forEach(element => {
         element.style.display = (element.tagName === nameOfElement) ? 'block' : 'none'
       })
+
+      this.startpage.style.display = 'none'
     }
 
     /**

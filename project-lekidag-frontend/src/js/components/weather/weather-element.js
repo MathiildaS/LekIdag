@@ -10,8 +10,8 @@ layoutTemplate.innerHTML = `
   ${sharedStyles}
     :host {
       position: absolute;
-      top: 3rem;
-      right: 2rem;
+      top: 5rem;
+      right: 6rem;
       z-index: 10;
       display: block;
     }
@@ -21,8 +21,9 @@ layoutTemplate.innerHTML = `
       grid-template-columns: auto auto;
       align-items: center;
       justify-content: center;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
+      background-color: #fffef9;
+      border-radius: 12px;
+      border: 1px solid #E89E69;
       padding: 5px 10px;
       gap: 0.5rem;
     }
@@ -43,11 +44,10 @@ layoutTemplate.innerHTML = `
 
     .info span {
       display: block;
-      color: #ffffff;
+      color: #E89E69;
       line-height: 1.2;
     }
 </style>
-
 <div class="weather-container">
   <div class="info">
   <span id="temp">--</span>
