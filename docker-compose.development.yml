@@ -1,6 +1,7 @@
 # No rebuild needed when updating the src code.
 services:
   backend:
+    build: ./project-lekidag-backend
     ports:
       - "5000:5000" # The port that backend listen to.
     volumes:
@@ -13,6 +14,7 @@ services:
     command: npm run dev # Run backend server
 
   frontend:
+    build: ./project-lekidag-frontend
     ports:
       - "5173:5173" # Port to Vite.
     volumes:

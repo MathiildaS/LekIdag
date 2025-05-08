@@ -105,9 +105,12 @@ customElements.define('layout-element',
       this.attachShadow({ mode: 'open' })
         .appendChild(layoutTemplate.content.cloneNode(true))
 
+      // Creates a new AbortController object instance to make it possible to remove event listeners.
       this.abortController = new AbortController()
 
+      // References to the elements in the shadow DOM.
       this.getGame = this.shadowRoot.querySelector('.game')
+      this.getCraft = this.shadowRoot.querySelector('.craft')
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
       this.weather = this.shadowRoot.querySelector('weather-element')
       this.homepage = this.shadowRoot.querySelector('.homepage')
@@ -134,6 +137,20 @@ customElements.define('layout-element',
         // Display the buttons to choose age.
         if (gameElement) {
           gameElement.displayButtons()
+        }
+      }, { signal: this.abortController.signal })
+
+      // Listen for click on "Slumpa ett pyssel"-button.
+      this.getCraft.addEventListener('click', () => {
+        this.display('CRAFTS-ELEMENT')
+
+        // Collect all the slotted elements and find the one with the tag name "crafts-element"
+        const assignedNodes = slot.assignedElements()
+        const craftElement = assignedNodes.find(element => element.tagName === 'CRAFTS-ELEMENT')
+
+        // Display the buttons to choose age.
+        if (craftElement) {
+          craftElement.displayButtons()
         }
       }, { signal: this.abortController.signal })
 

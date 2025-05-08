@@ -8,6 +8,7 @@ import express from 'express'
 import { router as gamesRouter } from './gamesRouter.js'
 import { router as weatherRouter } from './weatherRouter.js'
 import { router as playgroundsRouter } from './playgroundsRouter.js'
+import { router as craftsRouter } from './craftsRouter.js'
 
 export const router = express.Router()
 
@@ -16,6 +17,9 @@ router.get('/', (req, res) => res.json({ message: 'Welcome to the LekIdag API, v
 
 // Register the route for game-requests.
 router.use('/', gamesRouter)
+
+// Register the route for craft-requests.
+router.use('/', craftsRouter)
 
 // Register the route for weather-requests.
 router.use('/', weatherRouter)
