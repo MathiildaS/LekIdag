@@ -43,6 +43,14 @@ layoutTemplate.innerHTML = `
 .homepage:hover {
   transform: scale(1.05);
 }
+
+.startpage {
+text-align: center;
+}
+
+.startpage h2 {
+text-transform: uppercase;
+}
 </style>
 
 <div class="layout-container">
@@ -61,6 +69,20 @@ layoutTemplate.innerHTML = `
   <weather-element></weather-element>
   </header>
   <main>
+    <div class="startpage">
+      <h2>Välkommen till LekIdag!</h2>
+      <p>Idétorka? Aldrig mer! 🌟<br><br>
+Här på LekIdag hittar du inspiration till roliga aktiviteter - perfekt för föräldrar, barnvakter eller barn med spring i benen.<br><br>
+
+Du kan välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
+kolla väderprognosen för att avgöra om det blir inomhusbus eller utomhuslek<br> 
+och anta en spännande utmaning!<br><br>
+Med hjälp av kartan hittar du enkelt lekplatser och badplatser nära dig<br>
+och om du loggar in kan du dessutom dela med dig av egna tips och bilder i vårt forum.<br><br>
+
+Välj något i menyn ovanför för att komma igång. Vem vet vad du hittar på idag? 🎈<br><br>
+Nu kör vi - det är dags att leka!</p>
+    </div>
     <slot></slot>
   </main>
   <footer>
@@ -89,6 +111,7 @@ customElements.define('layout-element',
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
       this.weather = this.shadowRoot.querySelector('weather-element')
       this.homepage = this.shadowRoot.querySelector('.homepage')
+      this.startpage = this.shadowRoot.querySelector('.startpage')
     }
 
     /**
@@ -138,6 +161,8 @@ customElements.define('layout-element',
         slottedElement.forEach(element => {
           element.style.display = 'none'
         })
+
+        this.startpage.style.display = 'flex'
       })
     }
 
@@ -154,6 +179,8 @@ customElements.define('layout-element',
       slottedElement.forEach(element => {
         element.style.display = (element.tagName === nameOfElement) ? 'block' : 'none'
       })
+
+      this.startpage.style.display = 'none'
     }
 
     /**
