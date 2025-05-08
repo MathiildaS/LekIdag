@@ -5,6 +5,7 @@ services:
       - "5000:5000" # The port that backend listen to.
     volumes:
       - ./project-lekidag-backend/src:/usr/src/app/src
+      - ./project-lekidag-backend/test:/usr/src/app/test
       - ./project-lekidag-backend/package.json:/usr/src/app/package.json
       - ./project-lekidag-backend/package-lock.json:/usr/src/app/package-lock.json
     env_file:
