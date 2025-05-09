@@ -70,7 +70,7 @@ text-transform: uppercase;
   </header>
   <main>
     <div class="startpage">
-      <h2>Välkommen till LekIdag!</h2>
+      <h2>Välkommen till LekIdag! Test igen!</h2>
       <p>Idétorka? Aldrig mer! 🌟<br><br>
 Här på LekIdag hittar du inspiration till roliga aktiviteter - perfekt för föräldrar, barnvakter eller barn med spring i benen.<br><br>
 
