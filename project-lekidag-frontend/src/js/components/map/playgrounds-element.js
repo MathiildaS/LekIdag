@@ -5,6 +5,8 @@
 import { sharedStyles } from '../../../css/shared.js'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 
 const playgroundsTemplate = document.createElement('template')
 playgroundsTemplate.innerHTML = `
@@ -14,6 +16,10 @@ playgroundsTemplate.innerHTML = `
     :host {
       display: none;
       width: 100%;
+    }
+
+    p {
+    text-align: center;
     }
 
     .search-container {
@@ -60,6 +66,7 @@ playgroundsTemplate.innerHTML = `
     }
 
 </style>
+<p>Använd gärna en mobil enhet med GPS för bästa resultat.</p>
 <div class="search-container">
   <input type="text" placeholder="Sök efter din plats..." class="search-input"/>
   <button class="search-button">Sök!</button>
@@ -67,6 +74,13 @@ playgroundsTemplate.innerHTML = `
 <div class="playgrounds-map"></div>
 <p class="error"></p>
 `
+// Fix marker icon not showing in production
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow
+})
 
 customElements.define('playgrounds-element',
   /**
