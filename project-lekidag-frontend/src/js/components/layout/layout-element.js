@@ -59,7 +59,7 @@ text-transform: uppercase;
   <div class="buttons">
     <button class="game">Slumpa en lek</button>
     <button class="craft">Slumpa ett pyssel</button>
-    <button class="challenge">Dagens utmaning</button>
+    <button class="challenge">Anta en utmaning</button>
   </div>
   <div class="buttons">
     <button class="playground">Hitta din närmsta lekplats</button>
@@ -111,6 +111,7 @@ customElements.define('layout-element',
       // References to the elements in the shadow DOM.
       this.getGame = this.shadowRoot.querySelector('.game')
       this.getCraft = this.shadowRoot.querySelector('.craft')
+      this.getChallenge = this.shadowRoot.querySelector('.challenge')
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
       this.weather = this.shadowRoot.querySelector('weather-element')
       this.homepage = this.shadowRoot.querySelector('.homepage')
@@ -151,6 +152,20 @@ customElements.define('layout-element',
         // Display the buttons to choose age.
         if (craftElement) {
           craftElement.displayButtons()
+        }
+      }, { signal: this.abortController.signal })
+
+      // Listen for click on "Anta en utmaning"-button.
+      this.getChallenge.addEventListener('click', () => {
+        this.display('CHALLENGES-ELEMENT')
+
+        // Collect all the slotted elements and find the one with the tag name "challenge-element"
+        const assignedNodes = slot.assignedElements()
+        const challengeElement = assignedNodes.find(element => element.tagName === 'CHALLENGES-ELEMENT')
+
+        // Display the buttons to choose age.
+        if (challengeElement) {
+          challengeElement.displayButtons()
         }
       }, { signal: this.abortController.signal })
 
