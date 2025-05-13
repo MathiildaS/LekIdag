@@ -1,5 +1,6 @@
 export default {
   testEnvironment: 'node',
   transform: {},
-  moduleNameMapper: {}
+  moduleNameMapper: {},
+  testMatch: ['**/test/**/*.test.js']
 }

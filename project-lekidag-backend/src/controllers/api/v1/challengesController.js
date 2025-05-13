@@ -30,7 +30,7 @@ export class ChallengesController {
       logger.debug(`Challenge found: ${findAChallenge.length}`)
 
       if (findAChallenge.length === 0) {
-        res.status(404).json({ message: 'No matching craft found' })
+        res.status(404).json({ message: 'No matching challenge found' })
         return
       }
 
