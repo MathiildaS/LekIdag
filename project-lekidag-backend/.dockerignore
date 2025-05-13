@@ -8,4 +8,5 @@
 !Dockerfile
 !Dockerfile.production
 !.env
-
+!test
+!jest.config.js
