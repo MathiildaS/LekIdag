@@ -33,7 +33,7 @@ describe('GamesController', () => {
   })
 
   // Description of the test.
-  it('a game should be returned with a status code 200', async () => {
+  test('a game should be returned with a status code 200', async () => {
     // Simulate a game/document from the database.
     const testGames = [
       {
