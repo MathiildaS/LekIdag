@@ -12,6 +12,8 @@ services:
       - LOG_LEVEL=${LOG_LEVEL}
       - LOGGER_MORGAN_FORMAT_ADD_REMOTE=${LOGGER_MORGAN_FORMAT_ADD_REMOTE}
       - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
     command: node src/server.js # Start the backend manually
 
   frontend:
