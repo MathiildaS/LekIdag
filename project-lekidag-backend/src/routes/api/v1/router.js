@@ -10,6 +10,7 @@ import { router as weatherRouter } from './weatherRouter.js'
 import { router as playgroundsRouter } from './playgroundsRouter.js'
 import { router as craftsRouter } from './craftsRouter.js'
 import { router as challengesRouter } from './challengesRouter.js'
+import { router as swimmingRouter } from './swimmingRouter.js'
 
 export const router = express.Router()
 
@@ -30,3 +31,6 @@ router.use('/', playgroundsRouter)
 
 // Register the route for challenges-requests.
 router.use('/', challengesRouter)
+
+// Register the route for swimming area-requests.
+router.use('/', swimmingRouter)

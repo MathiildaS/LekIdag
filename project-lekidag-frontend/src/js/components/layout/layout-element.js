@@ -63,7 +63,7 @@ text-transform: uppercase;
   </div>
   <div class="buttons">
     <button class="playground">Hitta din närmsta lekplats</button>
-    <button class="bath">Hitta din närmsta badplats</button>
+    <button class="swimmingarea">Hitta din närmsta badplats</button>
     <button class="forum">Forum</button>
   </button>
   <weather-element></weather-element>
@@ -113,6 +113,7 @@ customElements.define('layout-element',
       this.getCraft = this.shadowRoot.querySelector('.craft')
       this.getChallenge = this.shadowRoot.querySelector('.challenge')
       this.displayPlaygrounds = this.shadowRoot.querySelector('.playground')
+      this.displaySwimmingAreas = this.shadowRoot.querySelector('.swimmingarea')
       this.weather = this.shadowRoot.querySelector('weather-element')
       this.homepage = this.shadowRoot.querySelector('.homepage')
       this.startpage = this.shadowRoot.querySelector('.startpage')
@@ -179,6 +180,19 @@ customElements.define('layout-element',
         // Display the map with user coordinates.
         if (playgroundElement) {
           playgroundElement.displayMap(this.userPosition)
+        }
+      }, { signal: this.abortController.signal })
+
+      // Listen for click on "Hitta din närmsta badplats"
+      this.displaySwimmingAreas.addEventListener('click', () => {
+        this.display('SWIMMINGAREA-ELEMENT')
+
+        const assignedNodes = slot.assignedElements()
+        const swimmingareaElement = assignedNodes.find(element => element.tagName === 'SWIMMINGAREA-ELEMENT')
+
+        // Display the map with user coordinates.
+        if (swimmingareaElement) {
+          swimmingareaElement.displayMap(this.userPosition)
         }
       }, { signal: this.abortController.signal })
 
