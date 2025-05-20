@@ -30,8 +30,14 @@ backend-lint:
 
 backend-tests:
   stage: test
+  variables:
+    OPENWEATHER_API_KEY: $OPENWEATHER_API_KEY
+    DB_CONNECTION_STRING: $DB_CONNECTION_STRING
   script:
     - cd project-lekidag-backend
+    - mkdir -p keys
+    - echo "$JWT_PRIVATE_FILE" > keys/private.pem
+    - echo "$JWT_PUBLIC_FILE" > keys/public.pem
     - npm ci
     - npm run test
 

@@ -9,6 +9,7 @@ services:
       - ./project-lekidag-backend/test:/usr/src/app/test
       - ./project-lekidag-backend/package.json:/usr/src/app/package.json
       - ./project-lekidag-backend/package-lock.json:/usr/src/app/package-lock.json
+      - ./project-lekidag-backend/keys:/usr/src/app/keys
     env_file:
       - .env
     command: npm run dev # Run backend server

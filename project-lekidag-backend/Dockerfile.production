@@ -28,6 +28,9 @@ COPY --from=base /usr/bin/dumb-init /usr/bin/dumb-init
 # Set working directory
 WORKDIR /usr/src/app
 
+# Copy the keys for JWT.
+COPY keys ./keys
+
 # Copy only the built dependencies from the base image
 COPY --from=base --chown=node:node /usr/src/app/node_modules ./node_modules
 

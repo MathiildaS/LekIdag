@@ -3,5 +3,6 @@ export default {
   transform: {},
   moduleNameMapper: {},
   testMatch: ['**/test/**/*.test.js'],
-  setupFiles: ['./jest.setup.js']
+  setupFilesAfterEnv: ['./jest.setup.js'],
+  verbose: true
 }

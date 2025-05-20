@@ -16,12 +16,13 @@ import { reqLogger } from './config/morgan.js'
 import { logger } from './config/winston.js'
 import { connectMongoDB } from './config/mongoose.js'
 
+// Creates an Express application-instance.
+const expressApp = express()
+export { expressApp }
+
 try {
   // Connect to database MongoDB.
   await connectMongoDB(process.env.DB_CONNECTION_STRING)
-
-  // Creates an Express application-instance.
-  const expressApp = express()
 
   // Use helmet for security headers.
   expressApp.use(helmet())
@@ -34,6 +35,9 @@ try {
 
   // Log HTTP-requests.
   expressApp.use(reqLogger)
+
+  // Parse incoming JSON
+  expressApp.use(express.json())
 
   // Trust proxy headers in production mode.
   if (process.env.NODE_ENV === 'production') {
@@ -75,11 +79,13 @@ try {
       .json(errorInfo)
   })
 
-  const port = process.env.PORT || 5000
-  // Starts the HTTP server listening for connections on given PORT.
-  const server = expressApp.listen(port, () => {
-    logger.info(`Server running at http://localhost:${server.address().port}`)
-  })
+  if (process.env.NODE_ENV !== 'test') {
+    const port = process.env.PORT || 5000
+    // Starts the HTTP server listening for connections on given PORT.
+    const server = expressApp.listen(port, () => {
+      logger.info(`Server running at http://localhost:${server.address().port}`)
+    })
+  }
 } catch (e) {
   logger.error(e.message, { error: e })
   process.exitCode = 1
