@@ -4,7 +4,7 @@
  * @author Mathilda Segerlund <ms228qs@student.lnu.se>
  */
 
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { UserModel } from '../../../models/userModel.js'
 import jwt from 'jsonwebtoken'
 import { logger } from '../../../config/winston.js'

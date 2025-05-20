@@ -3,7 +3,7 @@
  * @module models/userModel.js
  * @author Mathilda Segerlund <ms228qs@student.lnu.se>
  */
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
 import { DEFAULT_SCHEMA } from './defaultSchema.js'
 
