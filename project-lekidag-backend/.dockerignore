@@ -11,3 +11,6 @@
 !test
 !jest.config.js
 !jest.setup.js
+!keys
+!keys/private.pem
+!keys/public.pem
