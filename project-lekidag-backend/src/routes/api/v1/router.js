@@ -38,5 +38,3 @@ router.use('/', challengesRouter)
 
 // Register the route for user-requests.
 router.use('/', userRouter)
-// Register the route for swimming area-requests.
-router.use('/', swimmingRouter)
