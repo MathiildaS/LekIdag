@@ -12,8 +12,6 @@ services:
       - LOG_LEVEL=${LOG_LEVEL}
       - LOGGER_MORGAN_FORMAT_ADD_REMOTE=${LOGGER_MORGAN_FORMAT_ADD_REMOTE}
       - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
-    volumes:
-      - ./project-lekidag-backend/keys:/usr/src/app/keys:ro
     command: node src/server.js # Start the backend manually
 
   frontend:
