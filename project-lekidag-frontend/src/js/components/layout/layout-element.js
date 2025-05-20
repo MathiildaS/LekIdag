@@ -65,7 +65,7 @@ text-transform: uppercase;
     <button class="playground">Hitta din närmsta lekplats</button>
     <button class="swimmingarea">Hitta din närmsta badplats</button>
     <button class="forum">Forum</button>
-  </button>
+  </div>
   <weather-element></weather-element>
   </header>
   <main>
