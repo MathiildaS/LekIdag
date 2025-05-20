@@ -33,11 +33,10 @@ backend-tests:
   variables:
     OPENWEATHER_API_KEY: $OPENWEATHER_API_KEY
     DB_CONNECTION_STRING: $DB_CONNECTION_STRING
+    JWT_PRIVATE_KEY: $JWT_PRIVATE_KEY
+    JWT_PUBLIC_KEY: $JWT_PUBLIC_KEY
   script:
     - cd project-lekidag-backend
-    - mkdir -p keys
-    - echo "$JWT_PRIVATE_FILE" > keys/private.pem
-    - echo "$JWT_PUBLIC_FILE" > keys/public.pem
     - npm ci
     - npm run test
 

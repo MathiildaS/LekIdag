@@ -5,11 +5,8 @@
  */
 
 import jwt from 'jsonwebtoken'
-import fs from 'fs'
-import path from 'path'
 
-const publicKeyPath = path.resolve('keys/public.pem')
-const publicKey = fs.readFileSync(publicKeyPath, 'utf8')
+const publicKey = process.env.JWT_PUBLIC_KEY.replace(/\\n/g, '\n')
 
 /**
  * Decode and verify the provided Json Web Token and refresh token.

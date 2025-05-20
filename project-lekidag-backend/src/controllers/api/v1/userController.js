@@ -8,14 +8,9 @@ import bcrypt from 'bcryptjs'
 import { UserModel } from '../../../models/userModel.js'
 import jwt from 'jsonwebtoken'
 import { logger } from '../../../config/winston.js'
-import fs from 'fs'
-import path from 'path'
 
-const privateKeyPath = path.resolve('keys/private.pem')
-const publicKeyPath = path.resolve('keys/public.pem')
-
-const privateKey = fs.readFileSync(privateKeyPath, 'utf8')
-const publicKey = fs.readFileSync(publicKeyPath, 'utf8')
+const privateKey = process.env.JWT_PRIVATE_KEY.replace(/\\n/g, '\n')
+const publicKey = process.env.JWT_PUBLIC_KEY.replace(/\\n/g, '\n')
 
 /**
  * Encapsulates a controller for handling register of a user, login and logout.

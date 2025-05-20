@@ -31,8 +31,6 @@ WORKDIR /usr/src/app
 # Copy only the built dependencies from the base image
 COPY --from=base --chown=node:node /usr/src/app/node_modules ./node_modules
 
-COPY --chown=node:node keys ./keys
-
 # Copy the rest of the src code
 COPY --chown=node:node . .
 
