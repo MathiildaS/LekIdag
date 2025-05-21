@@ -34,7 +34,7 @@ describe('userRouter', () => {
 
     // Check statuscode and message of the response.
     expect(res.statusCode).toBe(201)
-    expect(res.body.message).toBe('New user registered successfully!')
+    expect(res.body.message).toBe('Registreringen lyckades!')
   })
 
   // Create a test for log in a registered user.
@@ -70,7 +70,7 @@ describe('userRouter', () => {
 
     // Check statuscode and message of the response.
     expect(res.statusCode).toBe(200)
-    expect(res.body.message).toBe('Password updated successfully.')
+    expect(res.body.message).toBe('Lösenord har blivit uppdaterat!')
   })
 
   // Create a test for changing email.
@@ -87,7 +87,7 @@ describe('userRouter', () => {
 
     // Check statuscode and message of the response.
     expect(res.statusCode).toBe(200)
-    expect(res.body.message).toBe('Email updated successfully.')
+    expect(res.body.message).toBe('Ny E-post adress registrerad.')
   })
 
   // Create a test for getting a new access token.
@@ -120,7 +120,7 @@ describe('userRouter', () => {
 
     // Check statuscode and message of the response.
     expect(res.statusCode).toBe(200)
-    expect(res.body.message).toBe('Logged out successfully.')
+    expect(res.body.message).toBe('Du har blivit utloggad!')
   })
 
   // Create a test to verify that the refresh token is invalid after logging out.
@@ -135,7 +135,7 @@ describe('userRouter', () => {
 
     // Check statuscode and message of the response.
     expect(res.statusCode).toBe(401)
-    expect(res.body.message).toBe('Invalid refresh token')
+    expect(res.body.message).toBe('Ogiltig refresh token')
   })
 
   afterAll(async () => {

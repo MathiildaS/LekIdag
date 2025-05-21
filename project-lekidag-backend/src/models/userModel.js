@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true, // Must add a username.
     trim: true, // Remove spaces before and after.
-    minlength: 5, // Minimum length of characters.
+    minlength: 1, // Minimum length of characters.
     maxlength: 20, // Maximum length of characters.
     unique: true // Only one user with the name.
   },
