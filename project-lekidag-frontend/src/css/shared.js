@@ -56,6 +56,33 @@ export const sharedStyles = `
     box-shadow: 0 0 5px #fffef9;
   }
 
+  .user-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0;
+}
+
+.user-buttons button {
+  font-family: "DynaPuff", cursive;
+  font-weight: bold;
+  font-style: normal;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid #E89E69;
+  background-color: #fffef9;
+  color: #E89E69;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.user-buttons button:hover {
+  background-color: #F7D5B4;
+  color: white;
+  transform: scale(1.05);
+}
+
   .instruction {
     white-space: pre-line;
     line-height: 1.6;
@@ -95,11 +122,50 @@ export const sharedStyles = `
     color: #E89E69;
   }
 
-  weather-element {
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto;
-    position: absolute;
+weather-element {
+  display: block;
+  min-height: 110px; /* Så att det visuellt linjerar bättre med resten */
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* logga | meny | höger */
+  align-items: center;
+  gap: 2rem;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+    align-items: center;
+  gap: 1rem;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* högerjustera innehållet */
+}
+
+  .popup {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #E89E69;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .popup.display {
+    display: block;
+    opacity: 1;
   }
 
   @media (max-width: 600px) {

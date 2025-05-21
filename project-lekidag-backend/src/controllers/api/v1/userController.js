@@ -30,7 +30,7 @@ export class UserController {
 
       // Validate that no field is missing.
       if (!username || !password || !email || !firstName || !lastName) {
-        res.status(400).json({ error: 'Missing required fields' })
+        res.status(400).json({ error: 'Du måste fylla i alla fält!' })
         return
       }
 
@@ -39,10 +39,10 @@ export class UserController {
       const checkEmail = await UserModel.findOne({ email })
 
       if (checkUsername) {
-        res.status(409).json({ error: 'This username is already taken' })
+        res.status(409).json({ error: 'Användarnamn upptaget. Vänligen välj ett annat.' })
         return
       } else if (checkEmail) {
-        res.status(409).json({ error: 'This e-mail is already in use' })
+        res.status(409).json({ error: 'Denna e-post address är redan registrerad.' })
         return
       }
 
@@ -51,7 +51,14 @@ export class UserController {
       // Save it to the database.
       await newUser.save()
 
-      res.status(201).json({ message: 'New user registered successfully!' })
+      const userInfo = {
+        username: newUser.username,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email
+      }
+
+      res.status(201).json({ message: 'Registreringen lyckades!', userInfo })
     } catch (error) {
       next(error)
     }
@@ -72,7 +79,7 @@ export class UserController {
 
       // Check that username and password is provided.
       if (!username || !password) {
-        res.status(400).json({ error: 'Username and password are required' })
+        res.status(400).json({ error: 'Du måste ange användarnamn och lösenord.' })
         return
       }
 
@@ -100,7 +107,30 @@ export class UserController {
       theUser.refreshToken = refreshToken
       await theUser.save()
 
-      res.status(200).json({ message: 'Login successful!', accessToken, refreshToken })
+      res.status(200).json({ message: 'Inloggning lyckades!', username, accessToken, refreshToken })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /**
+   * Get the current user's profile information.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @param {Function} next - Express next middleware function.
+   */
+  async getProfile (req, res, next) {
+    try {
+      const userId = req.user.id
+      const userInfo = await UserModel.findById(userId).select('username firstName lastName email')
+
+      if (!userInfo) {
+        res.status(404).json({ error: 'Användare hittades inte.' })
+        return
+      }
+
+      res.status(200).json(userInfo)
     } catch (error) {
       next(error)
     }
@@ -119,7 +149,7 @@ export class UserController {
 
       // Error handling if no refresh token provided.
       if (!refreshToken) {
-        res.status(401).json({ message: 'No refresh token' })
+        res.status(401).json({ message: 'Saknar refresh token' })
         return
       }
 
@@ -137,7 +167,7 @@ export class UserController {
       // Check if the refresh token is saved with the user in the database.
       const theUser = await UserModel.findById(decodedToken.id)
       if (!theUser || theUser.refreshToken !== refreshToken) {
-        res.status(401).json({ message: 'Invalid refresh token' })
+        res.status(401).json({ message: 'Ogiltig refresh token' })
         return
       }
 
@@ -174,7 +204,7 @@ export class UserController {
       const { oldPassword, newPassword } = req.body
 
       if (!oldPassword || !newPassword) {
-        res.status(400).json({ message: 'Missing required fields.' })
+        res.status(400).json({ message: 'Vänligen fyll i båda fälten.' })
         return
       }
 
@@ -183,7 +213,7 @@ export class UserController {
 
       // Check if user exist
       if (!theUser) {
-        res.status(400).json({ message: 'Could not find user.' })
+        res.status(400).json({ message: 'Kunde inte hitta användare. Försök igen.' })
         return
       }
 
@@ -191,7 +221,7 @@ export class UserController {
       const passwordMatch = await bcrypt.compare(oldPassword, theUser.password)
 
       if (!passwordMatch) {
-        res.status(401).json({ message: 'Incorrect password.' })
+        res.status(401).json({ message: 'Ogiltigt lösenord. Försök igen.' })
         return
       }
 
@@ -199,7 +229,7 @@ export class UserController {
       theUser.password = newPassword
       await theUser.save()
 
-      res.status(200).json({ message: 'Password updated successfully.' })
+      res.status(200).json({ message: 'Lösenord har blivit uppdaterat!' })
     } catch (error) {
       next(error)
     }
@@ -221,7 +251,7 @@ export class UserController {
       const { newEmail } = req.body
 
       if (!newEmail) {
-        res.status(400).json({ message: 'Missing required field.' })
+        res.status(400).json({ message: 'Vänligen fyll i ny e-post adress.' })
         return
       }
 
@@ -230,14 +260,14 @@ export class UserController {
 
       // Check if user exist
       if (!theUser) {
-        res.status(400).json({ message: 'Could not find user.' })
+        res.status(400).json({ message: 'Kunde inte hitta användare. Försök igen.' })
         return
       }
 
       const addEmail = await UserModel.findOne({ email: newEmail })
 
       if (addEmail) {
-        res.status(409).json({ message: 'Email already in use.' })
+        res.status(409).json({ message: 'Denna e-post adress är redan registrerad.' })
         return
       }
 
@@ -245,7 +275,7 @@ export class UserController {
       theUser.email = newEmail
       await theUser.save()
 
-      res.status(200).json({ message: 'Email updated successfully.' })
+      res.status(200).json({ message: 'Ny E-post adress registrerad.' })
     } catch (error) {
       next(error)
     }
@@ -267,7 +297,7 @@ export class UserController {
 
       // Check if user exist
       if (!theUser) {
-        res.status(400).json({ message: 'Could not find user.' })
+        res.status(400).json({ message: 'Kunde inte hitta användare. Försök igen.' })
         return
       }
 
@@ -275,7 +305,7 @@ export class UserController {
       theUser.refreshToken = null
       await theUser.save()
 
-      res.status(200).json({ message: 'Logged out successfully.' })
+      res.status(200).json({ message: 'Du har blivit utloggad!' })
     } catch (error) {
       next(error)
     }

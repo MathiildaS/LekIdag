@@ -4,49 +4,42 @@
  */
 import { sharedStyles } from '../../../css/shared.js'
 
-const layoutTemplate = document.createElement('template')
-layoutTemplate.innerHTML = `
+const weatherTemplate = document.createElement('template')
+weatherTemplate.innerHTML = `
 <style>
   ${sharedStyles}
-    :host {
-      position: absolute;
-      top: 5rem;
-      right: 6rem;
-      z-index: 10;
-      display: block;
-    }
 
-    .weather-container {
-      display: grid;
-      grid-template-columns: auto auto;
-      align-items: center;
-      justify-content: center;
-      background-color: #fffef9;
-      border-radius: 12px;
-      border: 1px solid #E89E69;
-      padding: 5px 10px;
-      gap: 0.5rem;
-    }
+  .weather-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: center;
+    background-color: #fffef9;
+    border-radius: 12px;
+    border: 1px solid #E89E69;
+    padding: 5px 10px;
+    gap: 0.5rem;
+  }
 
-    #icon {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-    }
+  #icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain; 
+  }
 
-    .info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 
-    .info span {
-      display: block;
-      color: #E89E69;
-      line-height: 1.2;
-    }
+  .info span {
+    display: block;
+    color: #E89E69;
+    line-height: 1.2;
+  }
 </style>
 <div class="weather-container">
   <div class="info">
@@ -64,13 +57,13 @@ customElements.define('weather-element',
    */
   class extends HTMLElement {
     /**
-     * Create a shadow DOM for the layout-element and attach the template to its shadow root.
+     * Create a shadow DOM for the weather-element and attach the template to its shadow root.
      */
     constructor () {
       super()
 
       this.attachShadow({ mode: 'open' })
-        .appendChild(layoutTemplate.content.cloneNode(true))
+        .appendChild(weatherTemplate.content.cloneNode(true))
 
       // Creates a new AbortController object instance to make it possible to remove event listeners.
       this.abortController = new AbortController()

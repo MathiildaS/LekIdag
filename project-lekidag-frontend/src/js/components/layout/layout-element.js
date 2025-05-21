@@ -5,89 +5,82 @@
 import { sharedStyles } from '../../../css/shared.js'
 import { getUserLocation } from '../../geolocation.js'
 import logga from '../../../images/lekidag.png'
+import { fetchWithTokens } from '../../tokens.js'
 
 const layoutTemplate = document.createElement('template')
 layoutTemplate.innerHTML = `
 <style>
   ${sharedStyles}
   .logga {
-    position: absolute;
-    top: 0.5rem;
-    left: 6rem;
     height: 200px;
-    margin-right: 20px;
-    vertical-align: middle;
-  }
-
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.1rem;
-    column-gap: 0.4rem;
-    margin-top: 1.2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .buttons button {
-    padding: 1rem 1rem;
-    font-size: 1rem;
-    border-radius: 12px;
   }
 
   .homepage {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
 
-.homepage:hover {
-  transform: scale(1.05);
-}
+  .homepage:hover {
+    transform: scale(1.05);
+  }
 
-.startpage {
-text-align: center;
-}
+  .startpage {
+    text-align: center;
+  }
 
-.startpage h2 {
-text-transform: uppercase;
-}
+  .startpage h2 {
+    text-transform: uppercase;
+  }
 </style>
 
 <div class="layout-container">
-<header>
-  <img src="${logga}" alt="LekIdag" class="logga homepage" />
-  <div class="buttons">
-    <button class="game">Slumpa en lek</button>
-    <button class="craft">Slumpa ett pyssel</button>
-    <button class="challenge">Anta en utmaning</button>
-  </div>
-  <div class="buttons">
-    <button class="playground">Hitta din närmsta lekplats</button>
-    <button class="swimmingarea">Hitta din närmsta badplats</button>
-    <button class="forum">Forum</button>
-  </div>
-  <weather-element></weather-element>
+  <header>
+    <div class="header-content">
+      <img src="${logga}" alt="LekIdag" class="logga homepage" />
+      <div class="menu">
+        <div class="buttons">
+          <button class="game">Slumpa en lek</button>
+          <button class="craft">Slumpa ett pyssel</button>
+          <button class="challenge">Anta en utmaning</button>
+        </div>
+        <div class="buttons">
+          <button class="playground">Hitta din närmsta lekplats</button>
+          <button class="swimmingarea">Hitta din närmsta badplats</button>
+          <button class="forum">Forum</button>
+        </div>
+      </div>
+      <div class="right-side">
+        <weather-element></weather-element>  
+        <div class="user-buttons">
+          <button class="register">Registrera dig</button>
+          <button class="login">Logga in</button>
+        </div>
+      </div>
+    </div>
   </header>
   <main>
     <div class="startpage">
       <h2>Välkommen till LekIdag! </h2>
       <p>Idétorka? Aldrig mer! 🌟<br><br>
-Här på LekIdag hittar du inspiration till roliga aktiviteter - perfekt för föräldrar, barnvakter eller barn med spring i benen.<br><br>
+      Här på LekIdag hittar du inspiration till roliga aktiviteter - perfekt för föräldrar, barnvakter eller barn med spring i benen.<br><br>
 
-Du kan välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
-kolla väderprognosen för att avgöra om det blir inomhusbus eller utomhuslek<br> 
-och anta en spännande utmaning!<br><br>
-Med hjälp av kartan hittar du enkelt lekplatser och badplatser nära dig<br>
-och om du loggar in kan du dessutom dela med dig av egna tips och bilder i vårt forum.<br><br>
+      Du kan välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
+      kolla väderprognosen för att avgöra om det blir inomhusbus eller utomhuslek<br> 
+      och anta en spännande utmaning!<br><br>
+      Med hjälp av kartan hittar du enkelt lekplatser och badplatser nära dig<br>
+      och om du loggar in kan du dessutom dela med dig av egna tips och bilder i vårt forum.<br><br>
 
-Välj något i menyn ovanför för att komma igång. Vem vet vad du hittar på idag? 🎈<br><br>
-Nu kör vi - det är dags att leka!</p>
+      Välj något i menyn ovanför för att komma igång. Vem vet vad du hittar på idag? 🎈<br><br>
+      Nu kör vi - det är dags att leka!</p>
     </div>
     <slot></slot>
   </main>
   <footer>
-  &copy; 2025. All rights reserved.
+    &copy; 2025. All rights reserved.
   </footer>
+  <div class="popup">
+    <p class="popup-text"></p>
+  </div>
 </div>
 `
 
@@ -117,6 +110,10 @@ customElements.define('layout-element',
       this.weather = this.shadowRoot.querySelector('weather-element')
       this.homepage = this.shadowRoot.querySelector('.homepage')
       this.startpage = this.shadowRoot.querySelector('.startpage')
+      this.registerButton = this.shadowRoot.querySelector('.register')
+      this.loginButton = this.shadowRoot.querySelector('.login')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
     }
 
     /**
@@ -127,6 +124,11 @@ customElements.define('layout-element',
       const slot = this.shadowRoot.querySelector('slot')
 
       this.userPosition = await getUserLocation()
+
+      const accessToken = localStorage.getItem('accessToken')
+      if (accessToken) {
+        this.updateButtons()
+      }
 
       // Listen for click on "Slumpa en lek"-button.
       this.getGame.addEventListener('click', () => {
@@ -201,15 +203,136 @@ customElements.define('layout-element',
       }
 
       this.homepage.addEventListener('click', () => {
-        const slot = this.shadowRoot.querySelector('slot')
-        const slottedElement = slot.assignedElements()
-
-        slottedElement.forEach(element => {
-          element.style.display = 'none'
-        })
-
-        this.startpage.style.display = 'flex'
+        this.displayStartPage()
       })
+
+      // Listen for click on "Registrera dig"-button.
+      this.registerButton.addEventListener('click', () => {
+        if (this.registerButton.textContent === 'Registrera dig') {
+          this.display('REGISTER-ELEMENT')
+
+          // Collect all the slotted elements and find the one with the tag name "register-element"
+          const assignedNodes = slot.assignedElements()
+          const registerElement = assignedNodes.find(element => element.tagName === 'REGISTER-ELEMENT')
+
+          // Display the refgister form.
+          if (registerElement) {
+            registerElement.displayForm()
+          }
+        } else {
+          this.display('PROFILE-ELEMENT')
+          // Collect all the slotted elements and find the one with the tag name "profile-element"
+          const assignedNodes = slot.assignedElements()
+          const profileElement = assignedNodes.find(element => element.tagName === 'PROFILE-ELEMENT')
+
+          // Display the login form.
+          if (profileElement) {
+            profileElement.displayForm()
+          }
+        }
+      }, { signal: this.abortController.signal })
+
+      // Listen for click on "Logga in"-button.
+      this.loginButton.addEventListener('click', async () => {
+        if (this.loginButton.textContent === 'Logga in') {
+          this.display('LOGIN-ELEMENT')
+
+          // Collect all the slotted elements and find the one with the tag name "login-element"
+          const assignedNodes = slot.assignedElements()
+          const loginElement = assignedNodes.find(element => element.tagName === 'LOGIN-ELEMENT')
+
+          // Display the login form.
+          if (loginElement) {
+            loginElement.displayForm()
+          }
+        } else {
+          try {
+            let theUrl = ''
+            if (import.meta.env.MODE === 'development') {
+              theUrl = 'http://localhost:5000/api/v1/user/logout'
+            } else {
+              theUrl = 'https://cscloud8-46.lnu.se/api/v1/user/logout'
+            }
+
+            // Send a POST request to backend with access token provided to logout.
+            const logOut = await fetchWithTokens(theUrl, {
+              method: 'POST'
+            })
+
+            // Parse the response.
+            const response = await logOut.json()
+
+            // If successful log out, display message and reset form.
+            if (logOut.ok) {
+              this.showPopup('Du är nu utloggad!')
+
+              // Delete saved tokens.
+              localStorage.removeItem('accessToken')
+              localStorage.removeItem('refreshToken')
+
+              // Reset buttons.
+              this.registerButton.textContent = 'Registrera dig'
+              this.loginButton.textContent = 'Logga in'
+
+              // Display startpage.
+              this.displayStartPage()
+            } else {
+              this.showPopup(response.error || 'Något gick fel vid utloggning.')
+            }
+          } catch (error) {
+            this.showPopup(error.message || 'Ett fel uppstod. Försök igen.')
+          }
+        }
+      }, { signal: this.abortController.signal })
+
+      this.addEventListener('user-login', (loginEvent) => {
+        const { username, accessToken, refreshToken } = loginEvent.detail
+
+        this.showPopup(`Välkommen ${username}!`)
+
+        // Save the tokens in localStorage
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', refreshToken)
+
+        this.updateButtons()
+        this.displayStartPage()
+      }, { signal: this.abortController.signal })
+    }
+
+    /**
+     * Rename the buttons "Registrera dig" and "Logga in".
+     */
+    updateButtons () {
+      this.registerButton.textContent = 'Min profil'
+      this.loginButton.textContent = 'Logga ut'
+    }
+
+    /**
+     * Displays the start page and hides all other slotted elements.
+     */
+    displayStartPage () {
+      const slot = this.shadowRoot.querySelector('slot')
+      const slottedElement = slot.assignedElements()
+
+      slottedElement.forEach(element => {
+        element.style.display = 'none'
+      })
+
+      this.startpage.style.display = 'block'
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**
