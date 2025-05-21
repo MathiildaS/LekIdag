@@ -124,7 +124,9 @@ customElements.define('profile-element',
      * added to the DOM. Use abortSignal to send signal to remove the event listener when abort-method is called.
      */
     connectedCallback () {
-      this.displayProfileInfo()
+      this.addEventListener('user-login', () => {
+        this.displayProfileInfo()
+      }, { signal: this.abortController.signal })
 
       // Listen for the forms submit event.
       this.passwordForm.addEventListener('submit', async (event) => {

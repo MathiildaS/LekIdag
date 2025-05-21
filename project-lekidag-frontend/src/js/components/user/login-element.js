@@ -119,7 +119,6 @@ customElements.define('login-element',
             body: JSON.stringify(dataObject)
           })
 
-          console.log('loggar body', dataObject)
           // Parse the response.
           const response = await sendForm.json()
 
