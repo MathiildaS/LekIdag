@@ -53,6 +53,8 @@ deploy:
         cd /var/www/lekidag/project-lekidag &&
         git pull &&
 
+        rm -f .env &&
+
         # Write to .env
         echo \"JWT_PRIVATE_KEY=$JWT_PRIVATE_KEY\" > .env &&
         echo \"JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY\" >> .env &&
@@ -62,7 +64,7 @@ deploy:
         echo \"LOG_LEVEL=info\" >> .env &&
         echo \"LOGGER_MORGAN_FORMAT_ADD_REMOTE=true\" >> .env &&
 
-        # Add rights
+        # Add rights and secure .env file
         chmod 600 .env &&
 
         # Rebuild and start containers
