@@ -59,7 +59,8 @@ deploy:
       export LOGGER_MORGAN_FORMAT_ADD_REMOTE=true &&
       cd /var/www/lekidag/project-lekidag &&
       git pull &&
-      docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build --no-cache
+      docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build --no-cache &&
+      docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
       "
   only:
     - main
