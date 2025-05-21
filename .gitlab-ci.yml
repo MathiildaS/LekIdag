@@ -44,22 +44,29 @@ backend-tests:
 deploy:
   stage: deploy
   script:
-  - mkdir -p ~/.ssh
-  - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-  - chmod 600 ~/.ssh/id_ed25519
-  - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
-  - |
-    ssh ubuntu@"$PRODUCTION_HOST" "
-      export JWT_PRIVATE_KEY='$JWT_PRIVATE_KEY' &&
-      export JWT_PUBLIC_KEY='$JWT_PUBLIC_KEY' &&
-      export DB_CONNECTION_STRING='$DB_CONNECTION_STRING' &&
-      export OPENWEATHER_API_KEY='$OPENWEATHER_API_KEY' &&
-      export PORT=5000 &&
-      export LOG_LEVEL=info &&
-      export LOGGER_MORGAN_FORMAT_ADD_REMOTE=true &&
-      cd /var/www/lekidag/project-lekidag &&
-      git pull &&
-      docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
+    - |
+      ssh ubuntu@"$PRODUCTION_HOST" "
+        cd /var/www/lekidag/project-lekidag &&
+        git pull &&
+
+        # Write to .env
+        echo \"JWT_PRIVATE_KEY=$JWT_PRIVATE_KEY\" > .env &&
+        echo \"JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY\" >> .env &&
+        echo \"DB_CONNECTION_STRING=$DB_CONNECTION_STRING\" >> .env &&
+        echo \"OPENWEATHER_API_KEY=$OPENWEATHER_API_KEY\" >> .env &&
+        echo \"PORT=5000\" >> .env &&
+        echo \"LOG_LEVEL=info\" >> .env &&
+        echo \"LOGGER_MORGAN_FORMAT_ADD_REMOTE=true\" >> .env &&
+
+        # Add rights
+        chmod 600 .env &&
+
+        # Rebuild and start containers
+        docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
       "
   only:
     - main
