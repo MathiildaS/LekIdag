@@ -146,6 +146,16 @@ export const sharedStyles = `
     font-size: 0.9rem;
   }
 
+  a {
+    color:rgb(237, 183, 144);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
   main {
     flex-grow: 1;
     padding: 2rem;
@@ -198,6 +208,13 @@ export const sharedStyles = `
   .popup.display {
     display: block;
     opacity: 1;
+  }
+
+  .illustration {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
   }
 
   @media (max-width: 1024px) {

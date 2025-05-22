@@ -13,51 +13,58 @@ swimmingAreaTemplate.innerHTML = `
 <style>  
   @import "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
   ${sharedStyles}
-    :host {
-      display: none;
-      width: 100%;
-    }
+  :host {
+    display: none;
+    width: 100%;
+  }
 
-    p {
+  p {
     text-align: center;
-    }
+  }
 
-    .search-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 1rem;
-      gap: 0.5rem;
-    }
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    gap: 0.5rem;
+  }
 
-    .search-input {
-      padding: 0.5rem;
-      width: 250px;
-      border: 2px solid #f5a623;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+  .search-input {
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    border: 1px solid #E89E69;
+    border-radius: 12px;
+    background-color: #fffef9;
+    color: #E89E69;
+    font-family: "DynaPuff", cursive;
+  }
 
-    .search-input:focus {
-      border: 2px solid #f5a623;
-      outline: none;
-      box-shadow: 0 0 5px #f5a623;
-    }
+  .search-input::placeholder {
+    color: #E89E69;
+    opacity: 0.7;
+  }
 
-    .search-button {
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-    }
+  .search-input:focus {
+    outline: none;
+    border-color: #f5a623;
+    box-shadow: 0 0 5px #f5a623;
+  }
 
-    .playgrounds-map {
-      width: 50%;
-      height: 60vh;
-      margin: 2rem auto;
-      position: relative;
-      border: 2px solid #f5a623;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+  .search-button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+
+  .swimmingarea-map {
+    width: 50%;
+    height: 60vh;
+    margin: 2rem auto;
+    position: relative;
+    border: 2px solid #f5a623;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
 
     .error {
       display: none;
@@ -68,9 +75,9 @@ swimmingAreaTemplate.innerHTML = `
 <p>Använd gärna en mobil enhet med GPS för bästa resultat.</p>
 <div class="search-container">
   <input type="text" placeholder="Sök efter din plats..." class="search-input"/>
-  <button class="search-button">Sök!</button>
+  <button class="search-button styled-button">Sök!</button>
 </div>
-<div class="playgrounds-map"></div>
+<div class="swimmingarea-map"></div>
 <p class="error"></p>
 `
 // Manually set Leaflet default marker icon and shadow
@@ -99,7 +106,7 @@ customElements.define('swimmingarea-element',
       this.abortController = new AbortController()
 
       // Reference to the element in the shadow DOM.
-      this.playgroundMap = this.shadowRoot.querySelector('.playgrounds-map')
+      this.swimmingAreaMap = this.shadowRoot.querySelector('.swimmingarea-map')
       this.searchInput = this.shadowRoot.querySelector('.search-input')
       this.searchButton = this.shadowRoot.querySelector('.search-button')
       this.error = this.shadowRoot.querySelector('.error')
@@ -184,7 +191,7 @@ customElements.define('swimmingarea-element',
         if (!this.theMap) {
         // Create a Leaflet map and attach it to the DOM-element "this.playgroundMap"
         // Center the map around the users coordinates and with a 15 level zoom.
-          this.theMap = L.map(this.playgroundMap).setView([lat, lon], 15)
+          this.theMap = L.map(this.swimmingAreaMap).setView([lat, lon], 15)
 
           // Add OpenStreetMap tiles to the map.
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

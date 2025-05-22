@@ -22,11 +22,11 @@ a:hover {
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   html, body {
-    background-color: #fffef9;
+    background-color: #FFF5E5;
     color: rgba(255, 255, 255, 0.87);
   }
 
   a {
-    color: #87cefa;
+    color: #e3e3e3;
   }
 }
