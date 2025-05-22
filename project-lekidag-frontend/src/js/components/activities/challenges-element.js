@@ -52,8 +52,8 @@ challengesTemplate.innerHTML = `
 <h2><span class="title"></span></h2>
 <div class="instruction"></div>
 <div class="solution"></div>
-<button class="new-challenge">Slumpa en ny utmaning!</button>
-<button class="start">Börja om från början!</button>
+<button class="new-challenge styled-button">Slumpa en ny utmaning!</button>
+<button class="start styled-button">Börja om från början!</button>
 </div>
 `
 customElements.define('challenges-element',
@@ -93,6 +93,7 @@ customElements.define('challenges-element',
       ages.forEach(age => {
         const ageButton = document.createElement('button')
         ageButton.textContent = age
+        ageButton.classList.add('styled-button')
 
         ageButton.addEventListener('click', () => {
           this.chosenAge = age
@@ -141,8 +142,8 @@ customElements.define('challenges-element',
 
           // Add values to the elements in the shadow DOM.
           titleElement.textContent = title
-          instructionElement.textContent = instructions
-          solutionElement.textContent = solution
+          instructionElement.innerHTML = instructions
+          solutionElement.innerHTML = solution
         } else if (getTheChallenge.status === 404) {
           const titleElement = this.shadowRoot.querySelector('.title')
           const instructionElement = this.shadowRoot.querySelector('.instruction')

@@ -71,17 +71,17 @@ profileTemplate.innerHTML = `
   <h3>Ändra ditt lösenord</h3>
   <input type="password" name="oldPassword" placeholder="Nuvarande lösenord" required />
   <input type="password" name="newPassword" placeholder="Nytt lösenord" required />
-  <button type="submit">Spara nytt lösenord</button>
+  <button type="submit" class="styled-button">Spara nytt lösenord</button>
 </form>
 
 <form class="form" id="emailForm">
   <h3>Ändra din e-post adress</h3>
   <input type="email" name="newEmail" placeholder="Ny e-postadress" required />
-  <button type="submit">Spara ny e-post</button>
+  <button type="submit" class="styled-button">Spara ny e-post</button>
 </form>
 
 <div class="delete-button">
-  <button id="deleteAccount">Radera konto</button>
+  <button id="deleteAccount class="styled-button">Radera konto</button>
 </div>
 
 <div class="popup">
