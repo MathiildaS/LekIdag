@@ -50,7 +50,7 @@ gamesTemplate.innerHTML = `
   <div class="age-buttons"></div>
 </div>
 <div class="location">
-  <p>Välj var du önskar genomföra leken</p>
+  <p>Välj var ni önskar genomföra leken</p>
   <div class="location-buttons"></div>
 </div>
 <div class="game">

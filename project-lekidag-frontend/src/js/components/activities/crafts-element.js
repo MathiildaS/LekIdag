@@ -45,11 +45,12 @@ craftsTemplate.innerHTML = `
   }
 </style>
 <div class="age">
+  <h2>Vad kul att ni vill pyssla!</h2>
   <p>Välj vilken åldersgrupp pysslet ska vara anpassad för</p>
   <div class="age-buttons"></div>
 </div>
 <div class="location">
-  <p>Välj var du önskar genomföra pysslet</p>
+  <p>Välj var ni önskar genomföra pysslet</p>
   <div class="location-buttons"></div>
 </div>
 <div class="craft">
