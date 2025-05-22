@@ -1,6 +1,4 @@
 export const sharedStyles = `
-@import url('https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&display=swap');
-
   :host {
     font-family: "DynaPuff", cursive;
     font-optical-sizing: auto;
