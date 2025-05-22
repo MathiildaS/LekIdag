@@ -45,6 +45,7 @@ challengesTemplate.innerHTML = `
   }
 </style>
 <div class="age">
+  <h2>Här kan du och ditt barn anta dagens utmaning!</h2>
   <p>Välj vilken åldersgrupp utmaningen ska vara anpassad för</p>
   <div class="age-buttons"></div>
 </div>

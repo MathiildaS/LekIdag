@@ -63,16 +63,16 @@ layoutTemplate.innerHTML = `
     <div class="startpage">
       <h2>Välkommen till LekIdag! </h2>
       <p>Idétorka? Aldrig mer!<br><br>
-      Här på LekIdag hittar du inspiration till roliga aktiviteter<br>
-      - perfekt för föräldrar och barnvakter som söker inspiration eller barn med spring i benen.<br><br>
+      Här på LekIdag hittar ni inspiration till roliga aktiviteter<br>
+      - perfekt för dig som förälder eller barnvakt på språng som snabbt önskar inspiration till ditt barn med spring i benen.<br><br>
 
-      Du kan välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
-      kolla väderprognosen för att avgöra om det blir inomhusbus eller utomhuslek<br> 
-      och anta en spännande utmaning!<br><br>
-      Med hjälp av kartan hittar du enkelt lekplatser och badplatser nära dig<br>
-      och om du loggar in kan du dessutom dela med dig av egna tips och finna inspiration i vårt forum.<br><br>
+      Här kan ni välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
+      kolla väderprognosen för att avgöra om det blir inomhuspyssel eller utomhuslek<br> 
+      och anta en spännande utmaning! Kan ditt barn lösa utmaningen själv?<br><br>
+      Klicka på "Hitta min närmsta lekplats" eller "Hitta min närmsta badplats" för att snabbt och smidigt hitta lekplatser och badplatser nära er.<br>
+      Om du som förälder registrerar dig som användare och loggar in, kan du dessutom dela med dig av egna tips och finna inspiration från andra föräldrar i vårt forum.<br><br>
 
-      Välj något i menyn ovanför för att komma igång. Vem vet vad ni hittar på idag? 🎈<br><br></p>
+      Välj en kategori i menyn för att komma igång - nu blir det bus och lek! 🎈<br><br></p>
 
       <img src="${playing}" alt="Barn som spelar fotboll" class="illustration">
     </div>
