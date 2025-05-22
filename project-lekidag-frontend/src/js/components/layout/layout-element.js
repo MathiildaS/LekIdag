@@ -5,6 +5,7 @@
 import { sharedStyles } from '../../../css/shared.js'
 import { getUserLocation } from '../../geolocation.js'
 import logga from '../../../images/lekidag.png'
+import playing from '../../../images/playing.png'
 import { fetchWithTokens } from '../../tokens.js'
 
 const layoutTemplate = document.createElement('template')
@@ -12,7 +13,7 @@ layoutTemplate.innerHTML = `
 <style>
   ${sharedStyles}
   .logga {
-    height: 200px;
+    height: 220px;
   }
 
   .homepage {
@@ -72,6 +73,8 @@ layoutTemplate.innerHTML = `
 
       Välj något i menyn ovanför för att komma igång. Vem vet vad du hittar på idag? 🎈<br><br>
       Nu kör vi - det är dags att leka!</p>
+
+      <img src="${playing}" alt="Barn som spelar fotboll" class="illustration">
     </div>
     <slot></slot>
   </main>

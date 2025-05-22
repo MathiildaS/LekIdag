@@ -55,8 +55,8 @@ craftsTemplate.innerHTML = `
 <div class="craft">
 <h2><span class="title"></span></h2>
 <div class="instruction"></div>
-<button class="new-craft">Slumpa ett nytt pyssel!</button>
-<button class="start">Börja om från början!</button>
+<button class="new-craft styled-button">Slumpa ett nytt pyssel!</button>
+<button class="start styled-button">Börja om från början!</button>
 </div>
 `
 customElements.define('crafts-element',
@@ -99,6 +99,7 @@ customElements.define('crafts-element',
       ages.forEach(age => {
         const ageButton = document.createElement('button')
         ageButton.textContent = age
+        ageButton.classList.add('styled-button')
 
         // Display the location buttons when age is selected.
         ageButton.addEventListener('click', () => {
@@ -115,6 +116,7 @@ customElements.define('crafts-element',
       locations.forEach(location => {
         const locationButton = document.createElement('button')
         locationButton.textContent = location
+        locationButton.classList.add('styled-button')
 
         locationButton.addEventListener('click', () => {
           this.chosenLocation = location

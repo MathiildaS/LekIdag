@@ -9,7 +9,7 @@ gamesTemplate.innerHTML = `
 <style>
   ${sharedStyles}
 
-:host {
+  :host {
     display: none;
     width: 100%;
   }
@@ -24,15 +24,12 @@ gamesTemplate.innerHTML = `
     margin-bottom: 1.5rem;
   }
 
-  .age p,
-.location p {
-  margin-bottom: 1rem;
-  font-weight: bold;
-  font-size: 1.3rem;
-}
+  .age p, .location p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
 
-  .age-buttons,
-  .location-buttons {
+  .age-buttons, .location-buttons {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
@@ -48,6 +45,7 @@ gamesTemplate.innerHTML = `
   }
 </style>
 <div class="age">
+  <h2>Nu är det dags att leka!</h2>
   <p>Välj vilken åldersgrupp leken ska vara anpassad för</p>
   <div class="age-buttons"></div>
 </div>
@@ -58,8 +56,8 @@ gamesTemplate.innerHTML = `
 <div class="game">
 <h2><span class="title"></span></h2>
 <div class="instruction"></div>
-<button class="new-game">Slumpa en ny lek!</button>
-<button class="start">Börja om från början!</button>
+<button class="new-game styled-button">Slumpa en ny lek!</button>
+<button class="start styled-button">Börja om från början!</button>
 </div>
 `
 
@@ -103,6 +101,7 @@ customElements.define('games-element',
       ages.forEach(age => {
         const ageButton = document.createElement('button')
         ageButton.textContent = age
+        ageButton.classList.add('styled-button')
 
         // Display the location buttons when age is selected.
         ageButton.addEventListener('click', () => {
@@ -120,6 +119,7 @@ customElements.define('games-element',
       locations.forEach(location => {
         const locationButton = document.createElement('button')
         locationButton.textContent = location
+        locationButton.classList.add('styled-button')
 
         locationButton.addEventListener('click', () => {
           this.chosenLocation = location
@@ -168,7 +168,7 @@ customElements.define('games-element',
 
           // Add values to the elements in the shadow DOM.
           titleElement.textContent = title
-          instructionElement.textContent = instructions
+          instructionElement.innerHTML = instructions
         } else if (getTheGame.status === 404) {
           const titleElement = this.shadowRoot.querySelector('.title')
           const instructionElement = this.shadowRoot.querySelector('.instruction')

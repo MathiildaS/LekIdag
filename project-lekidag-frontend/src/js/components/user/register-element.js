@@ -61,7 +61,7 @@ registerTemplate.innerHTML = `
   <input name="firstName" placeholder="Förnamn" required />
   <input name="lastName" placeholder="Efternamn" required />
   <input name="password" type="password" placeholder="Lösenord" required />
-  <button type="submit">Registrera</button>
+  <button type="submit" class="styled-button">Registrera</button>
 <div class="popup">
   <p class="popup-text"></p>
 </div>

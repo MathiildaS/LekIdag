@@ -58,7 +58,7 @@ loginTemplate.innerHTML = `
 <form class="form">
   <input name="username" placeholder="Användarnamn" required />
   <input name="password" type="password" placeholder="Lösenord" required />
-  <button type="submit">Logga in</button>
+  <button type="submit" class="styled-button">Logga in</button>
 <div class="popup">
   <p class="popup-text"></p>
 </div>
