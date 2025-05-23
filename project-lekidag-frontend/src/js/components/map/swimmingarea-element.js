@@ -5,8 +5,6 @@
 import { sharedStyles } from '../../../css/shared.js'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import markerIcon from 'leaflet/dist/images/marker-icon.png'
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 
 const swimmingAreaTemplate = document.createElement('template')
 swimmingAreaTemplate.innerHTML = `
@@ -18,7 +16,7 @@ swimmingAreaTemplate.innerHTML = `
     width: 100%;
   }
 
-  p {
+  h3, p {
     text-align: center;
   }
 
@@ -66,26 +64,25 @@ swimmingAreaTemplate.innerHTML = `
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-    .error {
-      display: none;
-      color:rgb(224, 116, 116);
-      text-align: center;
-    }
 </style>
-<p>Använd gärna en mobil enhet med GPS för bästa resultat.</p>
+<h3>Var finns närmaste badplats?</h3>
+<p>Nedan ser ni en karta som visar lekplatser inom en radie på 2 km från er nuvarande plats.<br>
+Ni kan också söka manuellt efter en annan plats om ni vill upptäcka badplatser någon annanstans.</p>
 <div class="search-container">
   <input type="text" placeholder="Sök efter din plats..." class="search-input"/>
   <button class="search-button styled-button">Sök!</button>
 </div>
 <div class="swimmingarea-map"></div>
-<p class="error"></p>
+<div class="popup">
+  <p class="popup-text"></p>
+</div>
 `
 // Manually set Leaflet default marker icon and shadow
 delete L.Icon.Default.prototype._getIconUrl
 
 L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
 })
 
 customElements.define('swimmingarea-element',
@@ -102,14 +99,14 @@ customElements.define('swimmingarea-element',
       this.attachShadow({ mode: 'open' })
         .appendChild(swimmingAreaTemplate.content.cloneNode(true))
 
-      // Creates a new AbortController object instance to make it possible to remove event listeners.
-      this.abortController = new AbortController()
+      this.abortController = null
 
       // Reference to the element in the shadow DOM.
       this.swimmingAreaMap = this.shadowRoot.querySelector('.swimmingarea-map')
       this.searchInput = this.shadowRoot.querySelector('.search-input')
       this.searchButton = this.shadowRoot.querySelector('.search-button')
-      this.error = this.shadowRoot.querySelector('.error')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
 
       this.theMap = null
       this.fetch = null
@@ -137,18 +134,16 @@ customElements.define('swimmingarea-element',
             if (foundLocation.length > 0) {
               // Collect the first found position.
               const { lat, lon } = foundLocation[0]
-              this.error.style.display = 'none'
+              this.showPopup('Visar plats..')
               // Display the map with the found coordinates of the searched position.
               this.displayMap({ lat: Number(lat), lon: Number(lon) })
             } else {
               // Display error message if no position could be found.
-              this.error.textContent = 'Platsen kunde inte hittas.'
-              this.error.style.display = 'block'
+              this.showPopup('Platsen kunde inte hittas.')
             }
           } catch (error) {
             // Display error message if fail when searching.
-            this.error.textContent = 'Fel vid sökning. Försök igen.'
-            this.error.style.display = 'block'
+            this.showPopup('Fel vid sökning. Försök igen.')
           }
         }
       })
@@ -169,21 +164,21 @@ customElements.define('swimmingarea-element',
      * @param {number} coordinates.lon - Longitude.
      */
     async displayMap ({ lat, lon }) {
+      if (this.abortController) {
+        this.abortController.abort()
+      }
+
+      this.abortController = new AbortController()
+      const signal = this.abortController.signal
+
       // Mark this position as the one the user just requested.
       const requestedCoords = `${lat},${lon}`
       this.currentTargetCoords = requestedCoords
 
-      // Avbryt pågående fetch
-      if (this.mapFetchController) {
-        this.mapFetchController.abort()
-      }
-
-      this.mapFetchController = new AbortController()
-      const signal = this.mapFetchController.signal
+      this.showPopup('Hämtar badplatser. Det kan ta en liten stund..')
 
       if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
-        this.error.textContent = 'Kunde inte visa kartan.'
-        this.error.style.display = 'block'
+        this.showPopup('Kunde inte visa kartan.')
         return
       }
 
@@ -216,7 +211,6 @@ customElements.define('swimmingarea-element',
         await this.displaySwimmingAreas(lat, lon, signal)
 
         if (this.currentTargetCoords !== requestedCoords) {
-          console.log('New searched position.')
           return
         }
 
@@ -224,9 +218,7 @@ customElements.define('swimmingarea-element',
           this.theMap.invalidateSize()
         }, 200)
       } catch (error) {
-        console.error('Kartan kunde inte visas:', error)
-        this.error.textContent = 'Ett fel uppstod när kartan skulle visas.'
-        this.error.style.display = 'block'
+        this.showPopup('Ett fel uppstod när kartan skulle visas.')
       }
     }
 
@@ -239,10 +231,6 @@ customElements.define('swimmingarea-element',
      */
     async displaySwimmingAreas (lat, lon, signal) {
       try {
-        // Hide error message.
-        this.error.textContent = ''
-        this.error.style.display = 'none'
-
         // API URL-build based on enviroment.
         let theUrl = ''
         if (import.meta.env.MODE === 'development') {
@@ -300,13 +288,22 @@ customElements.define('swimmingarea-element',
           maxZoom: 17
         })
       } catch (error) {
-        if (error.name === 'AbortError') {
-          return
-        }
-        console.error('Kunde inte hämta badplatser:', error)
-        this.error.textContent = 'Kunde inte hämta badplatser. Uppdatera sidan för att försöka igen.'
-        this.error.style.display = 'block'
+        this.showPopup('Kunde inte hämta badplatser. Uppdatera sidan för att försöka igen.')
       }
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**
@@ -314,6 +311,8 @@ customElements.define('swimmingarea-element',
      * cancels ungoing fetch requests using the AbortControllers abort-method.
      */
     disconnectedCallback () {
-      this.abortController.abort()
+      if (this.abortController) {
+        this.abortController.abort()
+      }
     }
   })

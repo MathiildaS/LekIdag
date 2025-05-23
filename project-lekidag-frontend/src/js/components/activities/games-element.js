@@ -54,10 +54,13 @@ gamesTemplate.innerHTML = `
   <div class="location-buttons"></div>
 </div>
 <div class="game">
-<h2><span class="title"></span></h2>
-<div class="instruction"></div>
-<button class="new-game styled-button">Slumpa en ny lek!</button>
-<button class="start styled-button">Börja om från början!</button>
+  <h2><span class="title"></span></h2>
+  <div class="instruction"></div>
+  <button class="new-game styled-button">Slumpa en ny lek!</button>
+  <button class="start styled-button">Börja om från början!</button>
+  <div class="popup">
+    <p class="popup-text"></p>
+  </div>
 </div>
 `
 
@@ -86,6 +89,8 @@ customElements.define('games-element',
       this.gameContainer = this.shadowRoot.querySelector('.game')
       this.newGame = this.shadowRoot.querySelector('.new-game')
       this.start = this.shadowRoot.querySelector('.start')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
 
       // Initial state of selected age and location.
       this.chosenAge = ''
@@ -170,13 +175,12 @@ customElements.define('games-element',
           titleElement.textContent = title
           instructionElement.innerHTML = instructions
         } else if (getTheGame.status === 404) {
-          const titleElement = this.shadowRoot.querySelector('.title')
           const instructionElement = this.shadowRoot.querySelector('.instruction')
-          titleElement.textContent = 'Ingen lek hittades.'
+          this.showPopup('Ingen lek hittades för det valet!')
           instructionElement.textContent = ''
         }
       } catch (error) {
-        console.error('Kunde inte hämta leken:', error)
+        this.showPopup('Något gick fel. Försök igen!')
       }
     }
 
@@ -203,6 +207,20 @@ customElements.define('games-element',
       this.startPage()
       this.style.display = 'block'
       this.ageContainer.style.display = 'flex'
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**

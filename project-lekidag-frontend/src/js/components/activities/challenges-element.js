@@ -55,6 +55,9 @@ challengesTemplate.innerHTML = `
 <div class="solution"></div>
 <button class="new-challenge styled-button">Slumpa en ny utmaning!</button>
 <button class="start styled-button">Börja om från början!</button>
+<div class="popup">
+<p class="popup-text"></p>
+</div>
 </div>
 `
 customElements.define('challenges-element',
@@ -80,6 +83,8 @@ customElements.define('challenges-element',
       this.challengeContainer = this.shadowRoot.querySelector('.challenge')
       this.newChallenge = this.shadowRoot.querySelector('.new-challenge')
       this.start = this.shadowRoot.querySelector('.start')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
 
       // Initial state of selected age.
       this.chosenAge = ''
@@ -146,13 +151,12 @@ customElements.define('challenges-element',
           instructionElement.innerHTML = instructions
           solutionElement.innerHTML = solution
         } else if (getTheChallenge.status === 404) {
-          const titleElement = this.shadowRoot.querySelector('.title')
           const instructionElement = this.shadowRoot.querySelector('.instruction')
-          titleElement.textContent = 'Ingen utmaning hittades.'
+          this.showPopup('Ingen utmaning hittades för det valet!')
           instructionElement.textContent = ''
         }
       } catch (error) {
-        console.error('Kunde inte hämta utmaningen:', error)
+        this.showPopup('Något gick fel. Försök igen!')
       }
     }
 
@@ -179,6 +183,20 @@ customElements.define('challenges-element',
       this.startPage()
       this.style.display = 'block'
       this.ageContainer.style.display = 'flex'
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**

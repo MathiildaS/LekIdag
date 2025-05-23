@@ -191,11 +191,12 @@ export const sharedStyles = `
 
   .popup {
     position: fixed;
-    top: 35%;
+    top: 50%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #E89E69;
-    color: white;
+    background-color: #fffef9;
+    border: 2px solid #E89E69;
+    color: #E89E69;
     padding: 1rem 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
