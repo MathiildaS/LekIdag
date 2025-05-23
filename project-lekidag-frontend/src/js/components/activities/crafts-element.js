@@ -58,6 +58,9 @@ craftsTemplate.innerHTML = `
 <div class="instruction"></div>
 <button class="new-craft styled-button">Slumpa ett nytt pyssel!</button>
 <button class="start styled-button">Börja om från början!</button>
+<div class="popup">
+  <p class="popup-text"></p>
+</div>
 </div>
 `
 customElements.define('crafts-element',
@@ -85,6 +88,8 @@ customElements.define('crafts-element',
       this.craftContainer = this.shadowRoot.querySelector('.craft')
       this.newCraft = this.shadowRoot.querySelector('.new-craft')
       this.start = this.shadowRoot.querySelector('.start')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
 
       // Initial state of selected age and location.
       this.chosenAge = ''
@@ -177,13 +182,12 @@ customElements.define('crafts-element',
           titleElement.textContent = title
           instructionElement.textContent = instructions
         } else if (getTheCraft.status === 404) {
-          const titleElement = this.shadowRoot.querySelector('.title')
           const instructionElement = this.shadowRoot.querySelector('.instruction')
-          titleElement.textContent = 'Inget pyssel hittades.'
+          this.showPopup('Inget pyssel hittades för det valet!')
           instructionElement.textContent = ''
         }
       } catch (error) {
-        console.error('Kunde inte hämta leken:', error)
+        this.showPopup('Något gick fel. Försök igen!')
       }
     }
 
@@ -201,6 +205,20 @@ customElements.define('crafts-element',
       const instructionElement = this.shadowRoot.querySelector('.instruction')
       titleElement.textContent = ''
       instructionElement.textContent = ''
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**

@@ -5,8 +5,6 @@
 import { sharedStyles } from '../../../css/shared.js'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import markerIcon from 'leaflet/dist/images/marker-icon.png'
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 
 const playgroundsTemplate = document.createElement('template')
 playgroundsTemplate.innerHTML = `
@@ -18,7 +16,7 @@ playgroundsTemplate.innerHTML = `
     width: 100%;
   }
 
-  p {
+  h3, p {
     text-align: center;
   }
 
@@ -65,28 +63,25 @@ playgroundsTemplate.innerHTML = `
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-
-  .error {
-    display: none;
-    color:rgb(224, 116, 116);
-    text-align: center;
-  }
-
 </style>
-<p>Använd gärna en mobil enhet med GPS för bästa resultat.</p>
+<h3>Var finns närmaste lekplats?</h3>
+<p>Nedan ser ni en karta som visar lekplatser inom en radie på 1 km från er nuvarande plats.<br>
+Ni kan också söka manuellt efter en annan plats om ni vill upptäcka lekplatser någon annanstans.</p>
 <div class="search-container">
   <input type="text" placeholder="Sök efter din plats..." class="search-input"/>
   <button class="search-button styled-button">Sök!</button>
 </div>
 <div class="playgrounds-map"></div>
-<p class="error"></p>
+<div class="popup">
+  <p class="popup-text"></p>
+</div>
 `
 // Fix marker icon not showing in production
 delete L.Icon.Default.prototype._getIconUrl
 
 L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
 })
 
 customElements.define('playgrounds-element',
@@ -103,14 +98,14 @@ customElements.define('playgrounds-element',
       this.attachShadow({ mode: 'open' })
         .appendChild(playgroundsTemplate.content.cloneNode(true))
 
-      // Creates a new AbortController object instance to make it possible to remove event listeners.
-      this.abortController = new AbortController()
-
       // Reference to the element in the shadow DOM.
       this.playgroundMap = this.shadowRoot.querySelector('.playgrounds-map')
       this.searchInput = this.shadowRoot.querySelector('.search-input')
       this.searchButton = this.shadowRoot.querySelector('.search-button')
-      this.error = this.shadowRoot.querySelector('.error')
+      this.popup = this.shadowRoot.querySelector('.popup')
+      this.popupText = this.shadowRoot.querySelector('.popup-text')
+
+      this.abortController = null
       this.theMap = null
       this.fetch = null
     }
@@ -137,18 +132,16 @@ customElements.define('playgrounds-element',
             if (foundLocation.length > 0) {
               // Collect the first found position.
               const { lat, lon } = foundLocation[0]
-              this.error.style.display = 'none'
+              this.showPopup('Visar plats..')
               // Display the map with the found coordinates of the searched position.
               this.displayMap({ lat: Number(lat), lon: Number(lon) })
             } else {
               // Display error message if no position could be found.
-              this.error.textContent = 'Platsen kunde inte hittas.'
-              this.error.style.display = 'block'
+              this.showPopup('Platsen kunde inte hittas.')
             }
           } catch (error) {
             // Display error message if fail when searching.
-            this.error.textContent = 'Fel vid sökning. Försök igen.'
-            this.error.style.display = 'block'
+            this.showPopup('Fel vid sökning. Försök igen.')
           }
         }
         // Listen for 'Enter'-key and search for the position.
@@ -169,21 +162,21 @@ customElements.define('playgrounds-element',
      * @param {number} coordinates.lon - Longitude.
      */
     async displayMap ({ lat, lon }) {
+      if (this.abortController) {
+        this.abortController.abort()
+      }
+
+      this.abortController = new AbortController()
+      const signal = this.abortController.signal
+
       // Mark this position as the one the user just requested.
       const requestedCoords = `${lat},${lon}`
       this.currentTargetCoords = requestedCoords
 
-      // Avbryt pågående fetch
-      if (this.mapFetchController) {
-        this.mapFetchController.abort()
-      }
-
-      this.mapFetchController = new AbortController()
-      const signal = this.mapFetchController.signal
+      this.showPopup('Hämtar lekplatser. Det kan ta en liten stund..')
 
       if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
-        this.error.textContent = 'Kunde inte visa kartan.'
-        this.error.style.display = 'block'
+        this.showPopup('Kunde inte visa kartan.')
         return
       }
 
@@ -216,7 +209,6 @@ customElements.define('playgrounds-element',
         await this.displayPlaygrounds(lat, lon, signal)
 
         if (this.currentTargetCoords !== requestedCoords) {
-          console.log('New searched position.')
           return
         }
 
@@ -224,9 +216,7 @@ customElements.define('playgrounds-element',
           this.theMap.invalidateSize()
         }, 200)
       } catch (error) {
-        console.error('Kartan kunde inte visas:', error)
-        this.error.textContent = 'Ett fel uppstod när kartan skulle visas.'
-        this.error.style.display = 'block'
+        this.showPopup('Ett fel uppstod när kartan skulle visas.')
       }
     }
 
@@ -239,10 +229,6 @@ customElements.define('playgrounds-element',
      */
     async displayPlaygrounds (lat, lon, signal) {
       try {
-        // Hide error message.
-        this.error.textContent = ''
-        this.error.style.display = 'none'
-
         // API URL-build based on enviroment.
         let theUrl = ''
         if (import.meta.env.MODE === 'development') {
@@ -300,13 +286,22 @@ customElements.define('playgrounds-element',
           maxZoom: 17
         })
       } catch (error) {
-        if (error.name === 'AbortError') {
-          return
-        }
-        console.error('Kunde inte hämta lekplatser:', error)
-        this.error.textContent = 'Kunde inte hämta lekplatser. Uppdatera sidan för att försöka igen.'
-        this.error.style.display = 'block'
+        this.showPopup('Kunde inte hämta lekplatser. Uppdatera sidan för att försöka igen.')
       }
+    }
+
+    /**
+     * Displays a pop-up message with information for the user.
+     *
+     * @param {string} text - The message that will be displayed for the user.
+     */
+    showPopup (text) {
+      this.popupText.textContent = text
+      this.popup.classList.add('display')
+
+      setTimeout(() => {
+        this.popup.classList.remove('display')
+      }, 2000)
     }
 
     /**
@@ -314,6 +309,8 @@ customElements.define('playgrounds-element',
      * cancels ungoing fetch requests using the AbortControllers abort-method.
      */
     disconnectedCallback () {
-      this.abortController.abort()
+      if (this.abortController) {
+        this.abortController.abort()
+      }
     }
   })
