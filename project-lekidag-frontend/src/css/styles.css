@@ -3,14 +3,14 @@ html, body {
   padding: 0;
   background-color: #FFF5E5;
   font-family: Georgia, serif;
-  color: #F99D1F;
+  color: #d88c66;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 a {
-  color: #f5a623;
+  color: #d88c66;
   text-decoration: none;
   font-weight: bold;
 }

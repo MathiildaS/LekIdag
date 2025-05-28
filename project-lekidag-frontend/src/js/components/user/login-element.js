@@ -8,41 +8,6 @@ const loginTemplate = document.createElement('template')
 loginTemplate.innerHTML = `
 <style>
   ${sharedStyles}
-
-  .form {
-    display: none;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 500px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border: 2px solid #E89E69;
-    border-radius: 16px;
-    background-color: #fffef9;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  }
-
-  .form input {
-    padding: 0.8rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #E89E69;
-    border-radius: 12px;
-    background-color: #FFF5E5;
-    color: #E89E69;
-    font-family: "DynaPuff", cursive;
-  }
-
-  .form input::placeholder {
-    color: #E89E69;
-    opacity: 0.7;
-  }
-
-  .form input:focus {
-    outline: none;
-    border-color: #f5a623;
-    box-shadow: 0 0 5px #f5a623;
-  }
-
   .form button {
     align-self: center;
     margin-top: 1rem;
@@ -127,12 +92,14 @@ customElements.define('login-element',
             this.showPopup('Du är nu inloggad!')
             this.loginForm.reset()
 
+            sessionStorage.setItem('accessToken', response.accessToken)
+            localStorage.setItem('refreshToken', response.refreshToken)
+            sessionStorage.setItem('username', response.username)
+
             // When user is logged in, create and dispatch a custom event with username and access tokens.
             const loginEvent = new CustomEvent('user-login', {
               detail: {
-                username: response.username,
-                accessToken: response.accessToken,
-                refreshToken: response.refreshToken
+                username: response.username
               },
               bubbles: true,
               composed: true

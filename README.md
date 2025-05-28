@@ -100,6 +100,9 @@ Här är en översikt över centrala konfigurationsfiler i projektet:
 - `README.md`: Dokumentation av installation, drift, licens och teknikval.
 - `LICENSE`: Licensfil (CC BY-NC 4.0) för att reglera icke-kommersiell användning.
 
+- Vissa bilder i detta projekt är skapade med gratismaterial i Canva och används endast i utbildningssyfte. 
+De är inte avsedda för kommersiell användning. Om du återanvänder projektet, ersätt gärna dessa med egna bilder.
+
 # Dokumentation
 Projektet är väl dokumenterat med projektvision, kravspecifikation, arkitektur, testfall och tillhörande rapporter.
 README finns tillgänglig för varje del i projektet.

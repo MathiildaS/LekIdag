@@ -12,6 +12,7 @@ import { router as craftsRouter } from './craftsRouter.js'
 import { router as challengesRouter } from './challengesRouter.js'
 import { router as userRouter } from './userRouter.js'
 import { router as swimmingRouter } from './swimmingRouter.js'
+import { router as forumRouter } from './forumRouter.js'
 
 export const router = express.Router()
 
@@ -38,3 +39,6 @@ router.use('/', challengesRouter)
 
 // Register the route for user-requests.
 router.use('/', userRouter)
+
+// Register the route for forum-requests.
+router.use('/', forumRouter)

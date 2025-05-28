@@ -16,7 +16,7 @@ swimmingAreaTemplate.innerHTML = `
     width: 100%;
   }
 
-  h3, p {
+  h2, p {
     text-align: center;
   }
 
@@ -65,7 +65,7 @@ swimmingAreaTemplate.innerHTML = `
   }
 
 </style>
-<h3>Var finns närmaste badplats?</h3>
+<h2>Var finns närmaste badplats?</h2>
 <p>Nedan ser ni en karta som visar lekplatser inom en radie på 2 km från er nuvarande plats.<br>
 Ni kan också söka manuellt efter en annan plats om ni vill upptäcka badplatser någon annanstans.</p>
 <div class="search-container">

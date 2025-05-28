@@ -34,17 +34,18 @@ export const sharedStyles = `
     padding: 0.6rem 1.2rem;
     background-color: #fffef9;
     margin: 0.3rem;
-    border: 1px solid #E89E69;
+    border: 1px solid #d88c66;
     border-radius: 12px;
-    color: #E89E69;
+    color: #d88c66;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, transform 0.2s ease;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   }
 
   button:hover {
-    background-color: #F7D5B4;
+    background-color: rgba(216, 140, 102, 0.45);
     color: white;
     transform: scale(1.05);
   }
@@ -68,24 +69,37 @@ export const sharedStyles = `
     letter-spacing: 1px;
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
-    border: 1px solid #E89E69;
+    border: 1px solid #d88c66;
     background-color: #fffef9;
-    color: #E89E69;
+    color: #d88c66;
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   }
 
   .user-buttons button:hover,
   .styled-button:hover {
-    background-color: #F7D5B4;
+    background-color:rgba(216, 140, 102, 0.45);
     color: white;
     transform: scale(1.05);
   }
 
+  h2 {
+    text-transform: uppercase;
+    text-shadow:
+    -1px -1px 0 #6c2400,
+    1px -1px 0 #6c2400,
+    -1px  1px 0 #6c2400,
+    1px  1px 0 #6c2400,
+    2px  2px 5px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.05em;
+  }
+
   .title {
+    text-transform: uppercase;
     font-size: 1.5rem;
-    color: #E89E69;
+    color: #d88c66;
     margin-bottom: 1rem;
     border-bottom: 2px dashed #E89E69;
     padding-bottom: 0.5rem;
@@ -93,19 +107,26 @@ export const sharedStyles = `
     max-width: 90%;
     margin-left: auto;
     margin-right: auto;
+    text-shadow:
+    -1px -1px 0 #6c2400,
+    1px -1px 0 #6c2400,
+    -1px  1px 0 #6c2400,
+    1px  1px 0 #6c2400,
+    2px  2px 5px rgba(0, 0, 0, 0.3);
   }
 
-  .instruction, .solution {
+  .instruction, .solution, .forumpost {
     font-family: "Indie Flower", cursive;
     white-space: pre-line;
     margin-bottom: 2rem;
     font-size: 1.3rem;
     font-weight: 400;
     background-color: #fffef9;
+    color: #d88c66;
     padding: 1.5rem 2rem;
     border-radius: 16px;
-    border-left: 4px solid #E89E69;
-    border-right: 4px solid #E89E69;
+    border-left: 4px solid rgba(216, 140, 102, 0.69);
+    border-right: 4px solid rgba(216, 140, 102, 0.69);
     max-width: 700px;
     margin: 0 auto 2rem auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -122,6 +143,12 @@ export const sharedStyles = `
     border-bottom: 2px dashed #E89E69;
     font-family: "DynaPuff", cursive;
     font-size: 1.2rem;
+    text-shadow:
+    -1px -1px 0 #6c2400,
+    1px -1px 0 #6c2400,
+    -1px  1px 0 #6c2400,
+    1px  1px 0 #6c2400,
+    2px  2px 5px rgba(0, 0, 0, 0.3);
   }
 
   header, main, footer {
@@ -141,13 +168,13 @@ export const sharedStyles = `
   footer {
     background-color: #FFF5E5;
     padding: 1rem;
-    color: #E89E69;
+    color: #d88c66;
     text-align: center;
     font-size: 0.9rem;
   }
 
   a {
-    color:rgb(237, 183, 144);
+    color:rgba(216, 140, 102, 0.63);
     text-decoration: none;
     font-weight: 500;
   }
@@ -159,9 +186,9 @@ export const sharedStyles = `
   main {
     flex-grow: 1;
     padding: 2rem;
-    border: 3px solid #E89E69;
+    border: 3px solid #d88c66;
     background-color: #fffef9;
-    color: #E89E69;
+    color: #d88c66;
   }
 
   weather-element {
@@ -189,14 +216,76 @@ export const sharedStyles = `
     align-items: flex-end;
   }
 
+.form {
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 2px solid #d88c66;
+  border-radius: 16px;
+  background-color: #fffef9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  color: #d88c66;
+  font-family: "DynaPuff", cursive;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.form input,
+.form select,
+.form textarea {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #d88c66;
+  border-radius: 12px;
+  font-family: inherit;
+  background-color: #FFF5E5;
+  color: #d88c66;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form input::placeholder {
+  color: #d88c66;
+  opacity: 0.7;
+}
+
+.form input:focus,
+.form textarea:focus,
+.form select:focus {
+  outline: none;
+  border-color: #d88c66;
+  box-shadow: 0 0 5px #d88c66;
+}
+
+.form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+select,
+select option {
+  font-family: "DynaPuff", cursive;
+  font-optical-sizing: auto;
+  font-weight: 470;
+  font-style: normal;
+}
+
   .popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #fffef9;
-    border: 2px solid #E89E69;
-    color: #E89E69;
+    border: 2px solid #d88c66;
+    color: #d88c66;
     padding: 1rem 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -281,6 +370,16 @@ export const sharedStyles = `
     .logga {
       max-height: 120px;
     }
+
+      .form {
+    padding: 1.5rem;
+  }
+
+  .form input,
+  .form select,
+  .form textarea {
+    font-size: 1rem;
+  }
   }
 
   @media (max-width: 600px) {
@@ -355,5 +454,21 @@ export const sharedStyles = `
     .swimmingarea-map {
       height: 40vh;
     }
+
+      .form {
+    padding: 1rem;
+    border-width: 1px;
+  }
+
+  .form input,
+  .form select,
+  .form textarea {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .form label {
+    font-size: 0.95rem;
+  }
   }
 `
