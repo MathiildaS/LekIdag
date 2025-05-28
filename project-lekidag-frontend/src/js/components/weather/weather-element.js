@@ -16,7 +16,7 @@ weatherTemplate.innerHTML = `
     justify-content: center;
     background-color: #fffef9;
     border-radius: 12px;
-    border: 1px solid #E89E69;
+    border: 1px solid #d88c66;
     padding: 5px 10px;
     gap: 0.5rem;
   }
@@ -37,7 +37,7 @@ weatherTemplate.innerHTML = `
 
   .info span {
     display: block;
-    color: #E89E69;
+    color: #d88c66;
     line-height: 1.2;
   }
 </style>

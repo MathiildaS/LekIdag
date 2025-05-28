@@ -12,7 +12,7 @@ export async function fetchWithTokens (url, data = {}) {
   } else {
     theUrl = 'https://cscloud8-46.lnu.se/api/v1/user/refresh'
   }
-  const accessToken = localStorage.getItem('accessToken')
+  const accessToken = sessionStorage.getItem('accessToken')
   const refreshToken = localStorage.getItem('refreshToken')
 
   // Create data.headers and add the accesstoken to Authorization header.
@@ -31,7 +31,7 @@ export async function fetchWithTokens (url, data = {}) {
 
     if (tokenResponse.ok) {
       const { accessToken: newAccessToken } = await tokenResponse.json()
-      localStorage.setItem('accessToken', newAccessToken)
+      sessionStorage.setItem('accessToken', newAccessToken)
 
       // Retry the request with the new access token.
       data.headers.Authorization = `Bearer ${newAccessToken}`

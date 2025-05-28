@@ -16,7 +16,7 @@ playgroundsTemplate.innerHTML = `
     width: 100%;
   }
 
-  h3, p {
+  h2, p {
     text-align: center;
   }
 
@@ -64,7 +64,7 @@ playgroundsTemplate.innerHTML = `
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 </style>
-<h3>Var finns närmaste lekplats?</h3>
+<h2>Var finns närmaste lekplats?</h2>
 <p>Nedan ser ni en karta som visar lekplatser inom en radie på 1 km från er nuvarande plats.<br>
 Ni kan också söka manuellt efter en annan plats om ni vill upptäcka lekplatser någon annanstans.</p>
 <div class="search-container">

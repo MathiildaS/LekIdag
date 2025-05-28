@@ -28,10 +28,6 @@ layoutTemplate.innerHTML = `
   .startpage {
     text-align: center;
   }
-
-  .startpage h2 {
-    text-transform: uppercase;
-  }
 </style>
 
 <div class="layout-container">
@@ -72,9 +68,9 @@ layoutTemplate.innerHTML = `
       Klicka på "Hitta min närmsta lekplats" eller "Hitta min närmsta badplats" för att snabbt och smidigt hitta lekplatser och badplatser nära er.<br>
       Om du som förälder registrerar dig som användare och loggar in, kan du dessutom dela med dig av egna tips och finna inspiration från andra föräldrar i vårt forum.<br><br>
 
-      Välj en kategori i menyn för att komma igång - nu blir det bus och lek! 🎈<br><br></p>
+      Välj en kategori i menyn för att komma igång! 🎈<br><br></p>
 
-      <img src="${playing}" alt="Barn som spelar fotboll" class="illustration">
+      <img src="${playing}" alt="Kreativa barn" class="illustration">
     </div>
     <slot></slot>
   </main>
@@ -90,7 +86,7 @@ layoutTemplate.innerHTML = `
 
 customElements.define('layout-element',
   /**
-   * Represents the base-layout of "LekIdag" with menu and weather-display.
+   * Represents the base-layout of "LekIdag" with menu and weather-display. Handles routing of views.
    */
   class extends HTMLElement {
     /**
@@ -118,6 +114,7 @@ customElements.define('layout-element',
       this.loginButton = this.shadowRoot.querySelector('.login')
       this.popup = this.shadowRoot.querySelector('.popup')
       this.popupText = this.shadowRoot.querySelector('.popup-text')
+      this.forum = this.shadowRoot.querySelector('.forum')
     }
 
     /**
@@ -127,11 +124,24 @@ customElements.define('layout-element',
     async connectedCallback () {
       const slot = this.shadowRoot.querySelector('slot')
 
+      // Collect the user position.
       this.userPosition = await getUserLocation()
 
-      const accessToken = localStorage.getItem('accessToken')
+      // If access token exists, verify it by fetching the user's profile.
+      const accessToken = sessionStorage.getItem('accessToken')
       if (accessToken) {
-        this.updateButtons()
+        try {
+          const res = await fetchWithTokens('https://cscloud8-46.lnu.se/api/v1/user/profile', {
+          })
+
+          if (res.ok) {
+            this.updateButtons()
+          } else {
+            this.clearUserSession()
+          }
+        } catch {
+          this.clearUserSession()
+        }
       }
 
       // Listen for click on "Slumpa en lek"-button.
@@ -271,8 +281,9 @@ customElements.define('layout-element',
               this.showPopup('Du är nu utloggad!')
 
               // Delete saved tokens.
-              localStorage.removeItem('accessToken')
+              sessionStorage.removeItem('accessToken')
               localStorage.removeItem('refreshToken')
+              sessionStorage.removeItem('username')
 
               // Reset buttons.
               this.registerButton.textContent = 'Registrera dig'
@@ -290,16 +301,23 @@ customElements.define('layout-element',
       }, { signal: this.abortController.signal })
 
       this.addEventListener('user-login', (loginEvent) => {
-        const { username, accessToken, refreshToken } = loginEvent.detail
+        const { username } = loginEvent.detail
 
         this.showPopup(`Välkommen ${username}!`)
 
-        // Save the tokens in localStorage
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
-
         this.updateButtons()
         this.displayStartPage()
+      }, { signal: this.abortController.signal })
+
+      this.forum.addEventListener('click', () => {
+        this.display('FORUM-ELEMENT')
+
+        const assignedNodes = slot.assignedElements()
+        const forumElement = assignedNodes.find(element => element.tagName === 'FORUM-ELEMENT')
+
+        if (forumElement) {
+          forumElement.displayPostsView()
+        }
       }, { signal: this.abortController.signal })
     }
 
@@ -309,6 +327,17 @@ customElements.define('layout-element',
     updateButtons () {
       this.registerButton.textContent = 'Min profil'
       this.loginButton.textContent = 'Logga ut'
+    }
+
+    /**
+     * Clears all saved authentication tokens and resets UI to logged-out state.
+     */
+    clearUserSession () {
+      sessionStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      sessionStorage.removeItem('username')
+      this.registerButton.textContent = 'Registrera dig'
+      this.loginButton.textContent = 'Logga in'
     }
 
     /**
@@ -357,7 +386,7 @@ customElements.define('layout-element',
     }
 
     /**
-     * Called when removed from DOM. Listen for signal to abort event listeners or
+     * Called when layout-element is removed from the DOM. Listen for signal to abort event listeners or
      * fetch requests to prevent memory leaks.
      */
     disconnectedCallback () {
