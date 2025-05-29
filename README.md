@@ -1,5 +1,5 @@
 # LekIdag
-**LekIdag** är en webbapplikation för föräldrar, barnvakter och pedagoger som snabbt vill hitta åldersanpassade lekar, pyssel och utmaningar för barn samt närliggande lekplatser och badplatser baserat på användarens plats. Webbsidan visar en lokal väderprognos och erbjuder möjlighet att registrera sig som användare för att kunna dela inspiration i ett forum.
+LekIdag är en webbapplikation för föräldrar, barnvakter och pedagoger som snabbt vill hitta åldersanpassade lekar, pyssel och utmaningar för barn samt närliggande lekplatser och badplatser baserat på användarens plats. Webbsidan visar en lokal väderprognos och erbjuder möjlighet att registrera sig som användare för att kunna dela inspiration i ett forum.
 
 ## Funktioner
 - Slumpa fram lekar, pyssel och utmaningar baserat på ålder och plats (inomhus/utomhus)
@@ -68,7 +68,7 @@ HTTPS och omdirigering från HTTP. HTTPS-certifikat hanteras via Lets Encrypt.
 
 3. .env-filen skapas automatiskt med miljövariabler från GitLab.
 
-4. NGINX serverar frontend på HTTPS med certifikat via Let's Encrypt
+4. NGINX serverar frontend på HTTPS med certifikat via Lets Encrypt
 
 5. Applikationen körs på:
 
@@ -79,14 +79,14 @@ Backend API:
 [https://cscloud8-46.lnu.se/api/v1](https://cscloud8-46.lnu.se/api/v1)
 ```
 
-# CI/CD och testning
+## CI/CD och testning
 Projektet använder en GitLab CI/CD-pipeline för:
 
 - Lint och test av frontend och backend
 - Byggsteg för respektive Docker-image
 - Manuell deployment via SSH och Docker Compose
 
-Enhetstester och integrationstester körs med Jest och API:er testas manuellt med Postman. 
+Enhetstester och integrationstester körs med Jest och Supertest och API:er testas manuellt med Postman. 
 Manuella testfall finns dokumenterade.
 
 
@@ -109,15 +109,15 @@ README finns tillgänglig för varje del i projektet.
 Detta projekt är licensierat under [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
 
 Du får:
-- Använda, dela och modifiera projektet fritt **för icke-kommersiella syften**
-- Sprida vidare under samma villkor, så länge du ger **erkännande** till upphovspersonen (Mathilda Segerlund)
+- Använda, dela och modifiera projektet fritt för icke-kommersiella syften
+- Sprida vidare under samma villkor, så länge du ger erkännande till upphovspersonen (Mathilda Segerlund)
 
-Du får **inte**:
-- Använda projektet i **kommersiella sammanhang** utan skriftligt tillstånd
+Du får inte:
+- Använda projektet i kommersiella sammanhang utan skriftligt tillstånd
 
 > Jag förbehåller mig rätten att i framtiden licensiera projektet kommersiellt eller under annan licensform.
 
-- Vissa bilder i detta projekt är skapade med gratismaterial i Canva.
+Vissa bilder i detta projekt är skapade med gratismaterial i Canva.
 De är inte avsedda för kommersiell användning. Om du återanvänder projektet, ersätt gärna dessa med egna bilder.
 
 ## Upphovsrätt
