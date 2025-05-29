@@ -80,6 +80,16 @@ forumTemplate.innerHTML = `
 <button class="post-button styled-button">Skapa nytt inlägg</button>
 
 <form class="form">
+    <section class="forum-rules">
+  <h2>Forumregler</h2>
+  <ul>
+    <li>Håll en vänlig och respektfull ton.</li>
+    <li>Det är inte tillåtet att posta stötande, diskriminerande eller olagligt innehåll.</li>
+    <li>Inlägg med reklam eller spam tas bort.</li>
+    <li>Respektera andras åsikter - personangrepp tolereras inte.</li>
+    <li>Posta inte personuppgifter eller bilder på andra utan samtycke.</li>
+  </ul>
+</section>
   <label>Titel: <input name="title" required /></label>
   <label>Kategori:
     <select name="category">
@@ -94,6 +104,7 @@ forumTemplate.innerHTML = `
   </label>
   <label>Innehåll: <textarea name="content" required></textarea></label>
   <button type="submit" class="styled-button">Publicera</button>
+  <p>Genom att posta godkänner du våra forumregler.</p>
 </form>
 
 <table class="forum-table">

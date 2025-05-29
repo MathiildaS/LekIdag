@@ -1,24 +1,23 @@
 # LekIdag
-
-**LekIdag** är en webbapplikation som hjälper föräldrar, barnvakter och pedagoger att hitta åldersanpassade lekar, pyssel och utmaningar för barn – samt närliggande lekplatser och badplatser baserat på användarens plats.
+**LekIdag** är en webbapplikation för föräldrar, barnvakter och pedagoger som snabbt vill hitta åldersanpassade lekar, pyssel och utmaningar för barn samt närliggande lekplatser och badplatser baserat på användarens plats. Webbsidan visar en lokal väderprognos och erbjuder möjlighet att registrera sig som användare för att kunna dela inspiration i ett forum.
 
 ## Funktioner
-
 - Slumpa fram lekar, pyssel och utmaningar baserat på ålder och plats (inomhus/utomhus)
-- Visa aktuell väderprognos baserat på geolokalisering
+- Visa aktuell väderprognos baserat på plats från Geolocation API
 - Visa karta med närliggande lekplatser och badplatser
-- Forum för att dela aktiviteter, bilder och inspiration (under utveckling)
-- Användarhantering med JWT: registrering, inloggning, uppdatering, radering
+- Forum för att dela tips och finna inspiration
+- Användarhantering med JWT: registrering, inloggning, uppdatering av mail och lösenord samt radering av konto.
 
 ## Tekniker
-
-- **Frontend**: Vite, Web Components, HTML, CSS, JavaScript
+- **Frontend**: Vite, Webb Komponenter, HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, MongoDB Atlas
 - **API:er**: OpenWeatherMap, Geolocation API, Overpass API, Nominatim, Leaflet och OpenStreetMap
 - **CI/CD & Deploy**: GitLab CI/CD, Docker Compose, NGINX, CSCloud
-- **Testning**: Jest (enhetstester och integrationstester), Postman (API-tester), manuella testfall
+- **Testning**: Jest (enhetstester) och Supertest (integrationstester), Postman (API-tester), manuella testfall
 
 ## Installationsguide
+Projektet använder **Docker Compose** för att starta backend och frontend i både utvecklings- och produktionsmiljö.
+
 ### Lokalt med Docker Compose
 ```bash
 # Klona projektet
@@ -27,8 +26,8 @@ cd project-lekidag
 
 # Skapa .env med miljövariabler i projektets rotmapp
 Lägg till följande variabler:
-DB_CONNECTION_STRING="Lägg till din sträng"
-OPENWEATHER_API_KEY="Lägg till nyckel"
+DB_CONNECTION_STRING="Lägg till din sträng från databas"
+OPENWEATHER_API_KEY="Lägg till API-nyckel"
 JWT_PRIVATE_KEY="Lägg till nyckel"
 JWT_PUBLIC_KEY="Lägg till nyckel"
 PORT=5000
@@ -41,10 +40,11 @@ Docker Desktop tillhandahåller Docker Engine som agerar som den lokala servern 
 # Starta i utvecklingsmiljö
 docker compose -f docker-compose.development.yml up --build
 
-- Läser in docker-compose.development.yml, som definierar vilka tjänster som ska startas.
-- Bygger om alla Docker-bilder från respektive Dockerfile (--build), så att senaste kod och beroenden används.
-- Startar alla tjänster och kopplar ihop dem i ett gemensamt nätverk, vilket gör att backend kan kommunicera med databasen.
-- Exponerar tjänsternas portar till din lokala dator så att applikationen kan nås i webbläsaren under utveckling.
+- Läser in docker-compose.development.yml som definierar vilka tjänster som ska startas.
+- Bygger om alla Docker-bilder från respektive Dockerfile, så att den senaste koden och beroenden används.
+- Startar frontend och backend i olika containrar.
+- Kopplar ihop containrarna i ett gemensamt nätverk.
+- Exponerar tjänsternas portar till den lokala datorn så att applikationen kan nås i webbläsaren under utveckling.
 
 Frontend körs på: http://localhost:5173
 Backend-API körs på: http://localhost:5000
@@ -52,56 +52,54 @@ Backend-API körs på: http://localhost:5000
 
 ### Produktionsmiljö
 ```bash
-
 Applikationen är driftsatt med Docker Compose och NGINX på CSCloud:
 [https://cscloud8-46.lnu.se](https://cscloud8-46.lnu.se)
 
 Deploy sker manuellt via GitLab CI/CD (.gitlab-ci.yml) och SSH till servern. 
-Backend körs på port 5000. Frontend serveras statiskt via NGINX på port 3000 med 
+Backend körs på port 5000 och frontend serveras statiskt via NGINX på port 3000 med 
 HTTPS och omdirigering från HTTP. HTTPS-certifikat hanteras via Lets Encrypt. 
-Miljövariabler hanteras automatiskt i deployment-skriptet.
 
 # Översiktlig process
 1. CI/CD-pipelinen i GitLab kör deployment manuellt till CSCloud via SSH.
  
 2. Docker Compose använder docker-compose.production.yml som bygger:
 - Backend med Dockerfile.production
-- Frontend med Dockerfile.production (Vite → NGINX)
-- .env-filen skapas automatiskt med miljövariabler från GitLab.
-3. - Containrar startas på servern och är tillgängliga via HTTPS.
+- Frontend med Dockerfile.production
 
-4. Applikationen körs på:
+3. .env-filen skapas automatiskt med miljövariabler från GitLab.
+
+4. NGINX serverar frontend på HTTPS med certifikat via Let's Encrypt
+
+5. Applikationen körs på:
+
 Frontend:
 [https://cscloud8-46.lnu.se](https://cscloud8-46.lnu.se)
 
 Backend API:
 [https://cscloud8-46.lnu.se/api/v1](https://cscloud8-46.lnu.se/api/v1)
+```
 
 # CI/CD och testning
 Projektet använder en GitLab CI/CD-pipeline för:
 
 - Lint och test av frontend och backend
-- Byggsteg för båda delar
-- Manuell produktiondeploy via SSH och Docker Compose
+- Byggsteg för respektive Docker-image
+- Manuell deployment via SSH och Docker Compose
 
 Enhetstester och integrationstester körs med Jest och API:er testas manuellt med Postman. 
 Manuella testfall finns dokumenterade.
-```
+
 
 ## Projektstruktur och viktiga filer
+Här är en översikt över de centrala filerna i projektet:
 
-Här är en översikt över centrala konfigurationsfiler i projektet:
-
-- `.gitlab-ci.yml`: Definierar GitLab CI/CD-pipelinen. Kör automatiska teststeg (lint, test, build) för frontend och backend, samt hanterar manuell deployment till produktionsserver via SSH.
-- `docker-compose.development.yml`: Används för lokal utveckling. Startar frontend, backend och databas i separata containrar.
-- `docker-compose.production.yml`: Används vid produktiondeploy. Bygger optimerade Docker-bilder och hanterar miljövariabler automatiskt från GitLab.
+- `.gitlab-ci.yml`: Definierar GitLab CI/CD-pipelinen för test, build och deploy
+- `docker-compose.development.yml`: Används för lokal utveckling. Startar frontend och backend i separata containrar.
+- `docker-compose.production.yml`: Används vid produktion. Bygger Docker-bilder och hanterar miljövariabler automatiskt från GitLab.
 - `Dockerfile` / `Dockerfile.production`: Bygger backend och frontend i olika miljöer. Production-versionerna är optimerade för driftsättning.
 - `.env` (skapas lokalt): Innehåller känsliga miljövariabler för backend.
-- `README.md`: Dokumentation av installation, drift, licens och teknikval.
+- `README.md`: Dokumentation av projekt, installation, drift, licens och teknikval.
 - `LICENSE`: Licensfil (CC BY-NC 4.0) för att reglera icke-kommersiell användning.
-
-- Vissa bilder i detta projekt är skapade med gratismaterial i Canva och används endast i utbildningssyfte. 
-De är inte avsedda för kommersiell användning. Om du återanvänder projektet, ersätt gärna dessa med egna bilder.
 
 # Dokumentation
 Projektet är väl dokumenterat med projektvision, kravspecifikation, arkitektur, testfall och tillhörande rapporter.
@@ -118,6 +116,9 @@ Du får **inte**:
 - Använda projektet i **kommersiella sammanhang** utan skriftligt tillstånd
 
 > Jag förbehåller mig rätten att i framtiden licensiera projektet kommersiellt eller under annan licensform.
+
+- Vissa bilder i detta projekt är skapade med gratismaterial i Canva.
+De är inte avsedda för kommersiell användning. Om du återanvänder projektet, ersätt gärna dessa med egna bilder.
 
 ## Upphovsrätt
 

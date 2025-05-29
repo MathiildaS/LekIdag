@@ -23,12 +23,7 @@ gamesTemplate.innerHTML = `
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
-
-  .age p, .location p {
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-  }
-
+  
   .age-buttons, .location-buttons {
     display: flex;
     gap: 0.5rem;
@@ -44,6 +39,7 @@ gamesTemplate.innerHTML = `
     color: #E89E69;
   }
 </style>
+<div class="wrapper">
 <div class="age">
   <h2>Nu är det dags att leka!</h2>
   <p>Välj vilken åldersgrupp leken ska vara anpassad för</p>
@@ -58,9 +54,10 @@ gamesTemplate.innerHTML = `
   <div class="instruction"></div>
   <button class="new-game styled-button">Slumpa en ny lek!</button>
   <button class="start styled-button">Börja om från början!</button>
-  <div class="popup">
-    <p class="popup-text"></p>
-  </div>
+</div>  
+</div>
+<div class="popup">
+  <p class="popup-text"></p>
 </div>
 `
 
@@ -201,7 +198,7 @@ customElements.define('games-element',
     }
 
     /**
-     * Reset all values and displat the buttons to select age.
+     * Reset all values and displays the buttons to select age.
      */
     displayButtons () {
       this.startPage()
@@ -225,7 +222,7 @@ customElements.define('games-element',
 
     /**
      * Called when the component is removed from the DOM,
-     * cancels ungoing fetch requests using the AbortControllers abort-method and removes EventListeners.
+     * cancels ongoing fetch requests using the AbortControllers abort-method and removes EventListeners.
      */
     disconnectedCallback () {
       this.abortController.abort()

@@ -9,47 +9,52 @@ const profileTemplate = document.createElement('template')
 profileTemplate.innerHTML = `
 <style>
   ${sharedStyles}
-  h2 {
-      text-shadow:
-    -1px -1px 0 #5b3c2c,
-     1px -1px 0 #5b3c2c,
-    -1px  1px 0 #5b3c2c,
-     1px  1px 0 #5b3c2c;
-     letter-spacing: 0.05em;
-     }
+  .form button {
+    align-self: center;
+    margin-top: 1rem;
+  }
 
-.form button {
-  align-self: center;
-  margin-top: 1rem;
-}
+  .delete-button {
+    display: none;
+    justify-content: center;
+    margin-top: 2rem;
+  }
 
-.delete-button {
-  display: none;
-  justify-content: center;
-  margin-top: 2rem;
-}
+  .profile-info {
+    display: none;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
 
-.profile-info {
-  display: none;
-  text-align: center;
-  margin-bottom: 2rem;
-}
+  #info {
+    display: none;
+    text-align: center;
+    font-size: 0.7em;
+  }
+
+  .profileInfo {
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: #d88c66;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.05em;
+  }
 </style>
 <div class="profile-info">
   <h2 class="welcome-text">Välkommen till din profil!</h2>
-  <p><strong>Namn:</strong> <span class="first-name"></span></p>
-  <p><strong>Efternamn:</strong> <span class="last-name"></span></p>
-  <p><strong>E-post:</strong> <span class="email"></span></p>
+  <p class="profileInfo">Namn:</p> <span class="first-name"></span>
+  <p class="profileInfo">Efternamn:</p> <span class="last-name"></span>
+  <p class="profileInfo">E-post:</p> <span class="email"></span>
 </div>
 <form class="form" id="passwordForm">
-  <h3>Ändra ditt lösenord</h3>
+  <h2>Ändra ditt lösenord</h2>
   <input type="password" name="oldPassword" placeholder="Nuvarande lösenord" required />
   <input type="password" name="newPassword" placeholder="Nytt lösenord" required />
   <button type="submit" class="styled-button">Spara nytt lösenord</button>
 </form>
 
 <form class="form" id="emailForm">
-  <h3>Ändra din e-post adress</h3>
+  <h2>Ändra din e-postadress</h2>
   <input type="email" name="newEmail" placeholder="Ny e-postadress" required />
   <button type="submit" class="styled-button">Spara ny e-post</button>
 </form>
@@ -57,6 +62,9 @@ profileTemplate.innerHTML = `
 <div class="delete-button">
   <button id="deleteAccount" class="styled-button">Radera konto</button>
 </div>
+<p id="info">När du raderar ditt konto tas dina uppgifter permanent bort från vår databas.<br>
+Detta inkluderar användarnamn, e-post och profilinformation.<br>
+Publika inlägg kopplade till ditt namn kan finnas kvar.</p>
 
 <div class="popup">
   <p class="popup-text"></p>
@@ -91,6 +99,7 @@ customElements.define('profile-element',
       this.firstNameField = this.shadowRoot.querySelector('.first-name')
       this.lastNameField = this.shadowRoot.querySelector('.last-name')
       this.emailField = this.shadowRoot.querySelector('.email')
+      this.info = this.shadowRoot.querySelector('#info')
     }
 
     /**
@@ -259,6 +268,7 @@ customElements.define('profile-element',
       this.passwordForm.style.display = 'flex'
       this.emailForm.style.display = 'flex'
       this.delButton.style.display = 'flex'
+      this.info.style.display = 'block'
 
       this.displayProfileInfo()
     }

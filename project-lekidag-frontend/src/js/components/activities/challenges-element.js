@@ -23,12 +23,6 @@ challengesTemplate.innerHTML = `
     margin-bottom: 1.5rem;
   }
 
-  .age p {
-    margin-bottom: 1rem;
-    font-weight: bold;
-    font-size: 1.3rem;
-  }
-
   .age-buttons {
     display: flex;
     gap: 0.5rem;
@@ -44,6 +38,7 @@ challengesTemplate.innerHTML = `
     color: #E89E69;
   }
 </style>
+<div class="wrapper">
 <div class="age">
   <h2>Här kan du och ditt barn anta dagens utmaning!</h2>
   <p>Välj vilken åldersgrupp utmaningen ska vara anpassad för</p>
@@ -55,9 +50,10 @@ challengesTemplate.innerHTML = `
 <div class="solution"></div>
 <button class="new-challenge styled-button">Slumpa en ny utmaning!</button>
 <button class="start styled-button">Börja om från början!</button>
+</div>
+</div>
 <div class="popup">
 <p class="popup-text"></p>
-</div>
 </div>
 `
 customElements.define('challenges-element',

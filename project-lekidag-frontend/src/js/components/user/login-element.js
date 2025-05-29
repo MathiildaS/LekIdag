@@ -13,21 +13,23 @@ loginTemplate.innerHTML = `
     margin-top: 1rem;
   }
 
-  .message {
+  .info {
+    display: none;
     text-align: center;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
-    min-height: 1.5rem;
   }
 </style>
+<div class="info">
+  <h2>Logga in</h2>
+  <p>Fyll i dina uppgifter för att komma åt din profil och dina inlägg i forumet.</p>
+</div>
 <form class="form">
   <input name="username" placeholder="Användarnamn" required />
   <input name="password" type="password" placeholder="Lösenord" required />
   <button type="submit" class="styled-button">Logga in</button>
+</form>
 <div class="popup">
   <p class="popup-text"></p>
 </div>
-</form>
 `
 customElements.define('login-element',
   /**
@@ -48,7 +50,7 @@ customElements.define('login-element',
 
       // References to the elements in the shadow DOM.
       this.loginForm = this.shadowRoot.querySelector('.form')
-      this.infoMessage = this.shadowRoot.querySelector('.message')
+      this.info = this.shadowRoot.querySelector('.info')
       this.popup = this.shadowRoot.querySelector('.popup')
       this.popupText = this.shadowRoot.querySelector('.popup-text')
     }
@@ -118,6 +120,7 @@ customElements.define('login-element',
      * Display the login form.
      */
     displayForm () {
+      this.info.style.display = 'block'
       this.loginForm.style.display = 'flex'
     }
 

@@ -28,6 +28,13 @@ layoutTemplate.innerHTML = `
   .startpage {
     text-align: center;
   }
+
+  .right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+  }
 </style>
 
 <div class="layout-container">
@@ -58,17 +65,16 @@ layoutTemplate.innerHTML = `
   <main>
     <div class="startpage">
       <h2>Välkommen till LekIdag! </h2>
-      <p>Idétorka? Aldrig mer!<br><br>
-      Här på LekIdag hittar ni inspiration till roliga aktiviteter<br>
-      - perfekt för dig som förälder eller barnvakt på språng som snabbt önskar inspiration till ditt barn med spring i benen.<br><br>
+      <p>Idétorka? Aldrig mer!<br>
+      Här på LekIdag hittar ni massor av inspiration till roliga aktiviteter.<br><br>
 
       Här kan ni välja att slumpa fram en lek eller ett pyssel anpassat efter barnets ålder,<br>
       kolla väderprognosen för att avgöra om det blir inomhuspyssel eller utomhuslek<br> 
-      och anta en spännande utmaning! Kan ditt barn lösa utmaningen själv?<br><br>
-      Klicka på "Hitta min närmsta lekplats" eller "Hitta min närmsta badplats" för att snabbt och smidigt hitta lekplatser och badplatser nära er.<br>
-      Om du som förälder registrerar dig som användare och loggar in, kan du dessutom dela med dig av egna tips och finna inspiration från andra föräldrar i vårt forum.<br><br>
+      och anta en spännande utmaning medan leken eller pysslet förbereds! Kan ditt barn lösa utmaningen själv?<br><br>
+      Klicka på "Hitta min närmsta lekplats" eller "Hitta min närmsta badplats" för att snabbt och smidigt hitta lekplatser och badplatser nära er.<br><br>
+      Om du som förälder registrerar dig som användare och loggar in,<br>kan du dessutom dela med dig av egna tips och finna inspiration från andra föräldrar i vårt forum.<br><br>
 
-      Välj en kategori i menyn för att komma igång! 🎈<br><br></p>
+      Vad väntar ni på? Välj en kategori i menyn för att komma igång! 🎈<br><br></p>
 
       <img src="${playing}" alt="Kreativa barn" class="illustration">
     </div>
@@ -76,7 +82,7 @@ layoutTemplate.innerHTML = `
   </main>
   <footer>
     &copy; 2025 Mathilda Segerlund · Licens: <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a><br>
-  Del av kursprojekt på Linnéuniversitetet · <a href="mailto:ms228qs@student.lnu.se">Kontakta mig</a>
+  Del av kursprojekt på Linnéuniversitetet · <a href="mailto:mathilda.segerlund@gmail.com">Kontakta mig</a>
   </footer>
   <div class="popup">
     <p class="popup-text"></p>
@@ -86,7 +92,7 @@ layoutTemplate.innerHTML = `
 
 customElements.define('layout-element',
   /**
-   * Represents the base-layout of "LekIdag" with menu and weather-display. Handles routing of views.
+   * Represents the base-layout of "LekIdag". Handles navigation, display of weather and dynamically updates the view.
    */
   class extends HTMLElement {
     /**
@@ -190,6 +196,7 @@ customElements.define('layout-element',
       this.displayPlaygrounds.addEventListener('click', () => {
         this.display('PLAYGROUNDS-ELEMENT')
 
+        // Collect all the slotted elements and find the one with the tag name "playgrounds-element"
         const assignedNodes = slot.assignedElements()
         const playgroundElement = assignedNodes.find(element => element.tagName === 'PLAYGROUNDS-ELEMENT')
 
@@ -203,6 +210,7 @@ customElements.define('layout-element',
       this.displaySwimmingAreas.addEventListener('click', () => {
         this.display('SWIMMINGAREA-ELEMENT')
 
+        // Collect all the slotted elements and find the one with the tag name "swimmingarea-element"
         const assignedNodes = slot.assignedElements()
         const swimmingareaElement = assignedNodes.find(element => element.tagName === 'SWIMMINGAREA-ELEMENT')
 
@@ -212,16 +220,19 @@ customElements.define('layout-element',
         }
       }, { signal: this.abortController.signal })
 
+      // Display the local weather based on user location.
       if (this.weather) {
         this.weather.getTheLocation(this.userPosition)
       }
 
+      // Listen for click on logo to display the start page.
       this.homepage.addEventListener('click', () => {
         this.displayStartPage()
       })
 
       // Listen for click on "Registrera dig"-button.
       this.registerButton.addEventListener('click', () => {
+        // Check if text content of button is "Registrera dig" and display register-element
         if (this.registerButton.textContent === 'Registrera dig') {
           this.display('REGISTER-ELEMENT')
 
@@ -229,12 +240,14 @@ customElements.define('layout-element',
           const assignedNodes = slot.assignedElements()
           const registerElement = assignedNodes.find(element => element.tagName === 'REGISTER-ELEMENT')
 
-          // Display the refgister form.
+          // Display the register form.
           if (registerElement) {
             registerElement.displayForm()
           }
         } else {
+          // If text content of button is not "Registrera dig", display profile-element
           this.display('PROFILE-ELEMENT')
+
           // Collect all the slotted elements and find the one with the tag name "profile-element"
           const assignedNodes = slot.assignedElements()
           const profileElement = assignedNodes.find(element => element.tagName === 'PROFILE-ELEMENT')
@@ -248,6 +261,7 @@ customElements.define('layout-element',
 
       // Listen for click on "Logga in"-button.
       this.loginButton.addEventListener('click', async () => {
+        // Check if text content of button is "Logga in" and display login-element
         if (this.loginButton.textContent === 'Logga in') {
           this.display('LOGIN-ELEMENT')
 
@@ -260,6 +274,7 @@ customElements.define('layout-element',
             loginElement.displayForm()
           }
         } else {
+          // If text content of button is not "Logga in", send request to log out.
           try {
             let theUrl = ''
             if (import.meta.env.MODE === 'development') {
@@ -280,7 +295,7 @@ customElements.define('layout-element',
             if (logOut.ok) {
               this.showPopup('Du är nu utloggad!')
 
-              // Delete saved tokens.
+              // Delete saved tokens and username.
               sessionStorage.removeItem('accessToken')
               localStorage.removeItem('refreshToken')
               sessionStorage.removeItem('username')
@@ -300,6 +315,7 @@ customElements.define('layout-element',
         }
       }, { signal: this.abortController.signal })
 
+      // Listen for user-login custom event to collect the username and update the view.
       this.addEventListener('user-login', (loginEvent) => {
         const { username } = loginEvent.detail
 
@@ -309,12 +325,15 @@ customElements.define('layout-element',
         this.displayStartPage()
       }, { signal: this.abortController.signal })
 
+      // Listen for click on "Forum" button to display the forum-element.
       this.forum.addEventListener('click', () => {
         this.display('FORUM-ELEMENT')
 
+        // Collect all the slotted elements and find the one with the tag name "forum-element"
         const assignedNodes = slot.assignedElements()
         const forumElement = assignedNodes.find(element => element.tagName === 'FORUM-ELEMENT')
 
+        // Display the forum.
         if (forumElement) {
           forumElement.displayPostsView()
         }
@@ -322,7 +341,8 @@ customElements.define('layout-element',
     }
 
     /**
-     * Rename the buttons "Registrera dig" and "Logga in".
+     * Update and rename the buttons "Registrera dig" and "Logga in" to "Min profil" and "Logga ut".
+     * Called when logged in-state is updated.
      */
     updateButtons () {
       this.registerButton.textContent = 'Min profil'
@@ -330,7 +350,8 @@ customElements.define('layout-element',
     }
 
     /**
-     * Clears all saved authentication tokens and resets UI to logged-out state.
+     * Clears all saved authentication tokens. 
+     * Called when click on "Logga ut" button.
      */
     clearUserSession () {
       sessionStorage.removeItem('accessToken')
@@ -378,6 +399,7 @@ customElements.define('layout-element',
       const slot = this.shadowRoot.querySelector('slot')
       const slottedElement = slot.assignedElements()
 
+      // Only display the selected component
       slottedElement.forEach(element => {
         element.style.display = (element.tagName === nameOfElement) ? 'block' : 'none'
       })

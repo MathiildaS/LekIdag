@@ -58,8 +58,8 @@ export const sharedStyles = `
   .user-buttons {
     display: flex;
     justify-content: center;
-    gap: 0.6rem;
-    margin-top: 0;
+    gap: 0.3rem;
+    margin-top: -1.5rem;
   }
 
   .user-buttons button,
@@ -96,6 +96,11 @@ export const sharedStyles = `
     letter-spacing: 0.05em;
   }
 
+  .wrapper {
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
   .title {
     text-transform: uppercase;
     font-size: 1.5rem;
@@ -113,6 +118,7 @@ export const sharedStyles = `
     -1px  1px 0 #6c2400,
     1px  1px 0 #6c2400,
     2px  2px 5px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.05em;
   }
 
   .instruction, .solution, .forumpost {
@@ -149,6 +155,11 @@ export const sharedStyles = `
     -1px  1px 0 #6c2400,
     1px  1px 0 #6c2400,
     2px  2px 5px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .age p, .location p {
+    font-size: 1.3rem;
   }
 
   header, main, footer {
@@ -210,73 +221,70 @@ export const sharedStyles = `
     gap: 1rem;
   }
 
-  .right-side {
-    display: flex;
+  .form {
+    display: none;
     flex-direction: column;
-    align-items: flex-end;
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 2px solid #d88c66;
+    border-radius: 16px;
+    background-color: #fffef9;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
 
-.form {
-  display: none;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 2px solid #d88c66;
-  border-radius: 16px;
-  background-color: #fffef9;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
+  .form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #d88c66;
+    font-family: "DynaPuff", cursive;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
 
-.form label {
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
-  color: #d88c66;
-  font-family: "DynaPuff", cursive;
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-}
+  .form input,
+  .search-input,
+  .form select,
+  .form textarea {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d88c66;
+    border-radius: 12px;
+    font-family: inherit;
+    background-color: #FFF5E5;
+    color: #d88c66;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
 
-.form input,
-.form select,
-.form textarea {
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #d88c66;
-  border-radius: 12px;
-  font-family: inherit;
-  background-color: #FFF5E5;
-  color: #d88c66;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-}
+  .form input::placeholder,
+  .search-input::placeholder {
+    color: #d88c66;
+    opacity: 0.7;
+  }
 
-.form input::placeholder {
-  color: #d88c66;
-  opacity: 0.7;
-}
+  .form input:focus,
+  .form textarea:focus,
+  .form select:focus,
+  .search-input:focus {
+    outline: none;
+    border-color: #d88c66;
+    box-shadow: 0 0 5px #d88c66;
+  }
 
-.form input:focus,
-.form textarea:focus,
-.form select:focus {
-  outline: none;
-  border-color: #d88c66;
-  box-shadow: 0 0 5px #d88c66;
-}
+  .form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
 
-.form textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-select,
-select option {
-  font-family: "DynaPuff", cursive;
-  font-optical-sizing: auto;
-  font-weight: 470;
-  font-style: normal;
-}
+  select,
+  select option {
+    font-family: "DynaPuff", cursive;
+    font-optical-sizing: auto;
+    font-weight: 470;
+    font-style: normal;
+  }
 
   .popup {
     position: fixed;

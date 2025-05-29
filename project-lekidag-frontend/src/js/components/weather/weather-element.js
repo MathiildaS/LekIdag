@@ -7,7 +7,7 @@ import { sharedStyles } from '../../../css/shared.js'
 const weatherTemplate = document.createElement('template')
 weatherTemplate.innerHTML = `
 <style>
-  ${sharedStyles}
+${sharedStyles}
 
   .weather-container {
     display: grid;
@@ -118,7 +118,7 @@ customElements.define('weather-element',
 
           // Add values to the elemens in the DOM.
           this.weatherTemp.textContent = `${Math.round(weatherData.temperature)}°C`
-          this.weatherText.textContent = weatherData.weather
+          this.weatherText.textContent = weatherData.weather.charAt(0).toUpperCase() + weatherData.weather.slice(1)
           this.weatherLocation.textContent = weatherData.location
           this.weatherIcon.src = weatherData.iconUrl
           this.weatherIcon.alt = weatherData.weather
@@ -126,7 +126,6 @@ customElements.define('weather-element',
           throw new Error(`${getWeather.status}`)
         }
       } catch (error) {
-        console.log('Could not fetch the weather.', error)
         this.weatherText.textContent = 'Kunde inte hämta vädret'
       }
     }

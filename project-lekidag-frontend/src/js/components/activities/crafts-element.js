@@ -23,12 +23,6 @@ craftsTemplate.innerHTML = `
     margin-bottom: 1.5rem;
   }
 
-  .age p, location p {
-    margin-bottom: 1rem;
-    font-weight: bold;
-    font-size: 1.3rem;
-  }
-
   .age-buttons, .location-buttons {
     display: flex;
     gap: 0.5rem;
@@ -44,6 +38,7 @@ craftsTemplate.innerHTML = `
     color: #E89E69;
   }
 </style>
+<div class="wrapper">
 <div class="age">
   <h2>Vad kul att ni vill pyssla!</h2>
   <p>Välj vilken åldersgrupp pysslet ska vara anpassad för</p>
@@ -58,9 +53,10 @@ craftsTemplate.innerHTML = `
 <div class="instruction"></div>
 <button class="new-craft styled-button">Slumpa ett nytt pyssel!</button>
 <button class="start styled-button">Börja om från början!</button>
+</div>
+</div>
 <div class="popup">
   <p class="popup-text"></p>
-</div>
 </div>
 `
 customElements.define('crafts-element',

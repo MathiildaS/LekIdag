@@ -10,8 +10,6 @@ services:
       - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
       - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
-    depends_on:
-      - frontend # Frontend needs to start before backend
 
   frontend:
     container_name: lekidag-frontend
