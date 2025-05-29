@@ -1,5 +1,6 @@
 image: node:20
 
+# Define the pipeline stages
 stages:
   - build
   - test
@@ -28,6 +29,7 @@ backend-lint:
     - npm ci
     - npm run lint
 
+# Run backend integration and unit tests
 backend-tests:
   stage: test
   variables:
@@ -44,18 +46,22 @@ backend-tests:
 deploy:
   stage: deploy
   script:
+    # Set up SSH keys for authentication
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan -H "$PRODUCTION_HOST" >> ~/.ssh/known_hosts
+
+    # Connect to production server and run deployment commands
     - |
       ssh ubuntu@"$PRODUCTION_HOST" "
         cd /var/www/lekidag/project-lekidag &&
+
+      # Pull latest changes from GitLab  
         git pull &&
-
-        rm -f .env &&
-
-        # Write to .env
+      
+      # Recreate .env file with new secrets
+        rm -f .env &&  
         echo \"JWT_PRIVATE_KEY=$JWT_PRIVATE_KEY\" > .env &&
         echo \"JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY\" >> .env &&
         echo \"DB_CONNECTION_STRING=$DB_CONNECTION_STRING\" >> .env &&
@@ -67,7 +73,7 @@ deploy:
         # Add rights and secure .env file
         chmod 600 .env &&
 
-        # Rebuild and start containers
+        # Rebuild and restart containers
         docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
       "
   only:

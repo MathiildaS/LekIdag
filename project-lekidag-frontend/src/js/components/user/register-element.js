@@ -8,29 +8,40 @@ const registerTemplate = document.createElement('template')
 registerTemplate.innerHTML = `
 <style>
   ${sharedStyles}
-.form button {
-  align-self: center;
-  margin-top: 1rem;
-}
+  .form button {
+    align-self: center;
+    margin-top: 1rem;
+  }
 
-.message {
-  text-align: center;
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
-  min-height: 1.5rem;
-}
+  .form p {
+    text-align: center;
+    font-size: 0.7em;
+  }
+
+  .info {
+    display: none;
+    text-align: center;
+  }
+
 </style>
+<div class="info">
+  <h2>Registrera dig som användare</h2>
+  <p>Skapa ett konto för att dela egna tips och inspirera andra i vårt forum!</p>
+</div>
 <form class="form">
   <input name="username" placeholder="Användarnamn" required />
   <input name="email" type="email" placeholder="E-post" required />
   <input name="firstName" placeholder="Förnamn" required />
   <input name="lastName" placeholder="Efternamn" required />
   <input name="password" type="password" placeholder="Lösenord" required />
-  <button type="submit" class="styled-button">Registrera</button>
+  <button type="submit" class="styled-button">Registrera</button>  
+  <p>Vi värnar om din integritet.<br>
+  Dina personuppgifter hanteras i enlighet med GDPR och används endast för <br>att du ska kunna logga in, skapa och administrera dina inlägg i forumet.<br>
+  Du kan när som helst radera ditt konto via din profil.</p>
+</form>
 <div class="popup">
   <p class="popup-text"></p>
 </div>
-</form>
 `
 customElements.define('register-element',
   /**
@@ -51,7 +62,7 @@ customElements.define('register-element',
 
       // References to the elements in the shadow DOM.
       this.registerForm = this.shadowRoot.querySelector('.form')
-      this.infoMessage = this.shadowRoot.querySelector('.message')
+      this.info = this.shadowRoot.querySelector('.info')
       this.popup = this.shadowRoot.querySelector('.popup')
       this.popupText = this.shadowRoot.querySelector('.popup-text')
     }
@@ -110,6 +121,7 @@ customElements.define('register-element',
      * Display the register form.
      */
     displayForm () {
+      this.info.style.display = 'block'
       this.registerForm.style.display = 'flex'
     }
 

@@ -5,6 +5,8 @@
 import { sharedStyles } from '../../../css/shared.js'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import markerIcon from '../../../images/marker.png'
+import markerShadow from '../../../images/shdw.PNG'
 
 const swimmingAreaTemplate = document.createElement('template')
 swimmingAreaTemplate.innerHTML = `
@@ -27,38 +29,12 @@ swimmingAreaTemplate.innerHTML = `
     gap: 0.5rem;
   }
 
-  .search-input {
-    padding: 0.8rem 1rem;
-    font-size: 0.8rem;
-    border: 1px solid #E89E69;
-    border-radius: 12px;
-    background-color: #fffef9;
-    color: #E89E69;
-    font-family: "DynaPuff", cursive;
-  }
-
-  .search-input::placeholder {
-    color: #E89E69;
-    opacity: 0.7;
-  }
-
-  .search-input:focus {
-    outline: none;
-    border-color: #f5a623;
-    box-shadow: 0 0 5px #f5a623;
-  }
-
-  .search-button {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-  }
-
   .swimmingarea-map {
     width: 50%;
     height: 60vh;
     margin: 2rem auto;
     position: relative;
-    border: 2px solid #f5a623;
+    border: 2px solid #d88c66;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -67,9 +43,9 @@ swimmingAreaTemplate.innerHTML = `
 </style>
 <h2>Var finns närmaste badplats?</h2>
 <p>Nedan ser ni en karta som visar lekplatser inom en radie på 2 km från er nuvarande plats.<br>
-Ni kan också söka manuellt efter en annan plats om ni vill upptäcka badplatser någon annanstans.</p>
+Ni kan också söka manuellt efter en annan plats om ni vill upptäcka badplatser någon annanstans.<br><br></p>
 <div class="search-container">
-  <input type="text" placeholder="Sök efter din plats..." class="search-input"/>
+  <input type="text" placeholder="Sök efter plats..." class="search-input"/>
   <button class="search-button styled-button">Sök!</button>
 </div>
 <div class="swimmingarea-map"></div>
@@ -77,12 +53,15 @@ Ni kan också söka manuellt efter en annan plats om ni vill upptäcka badplatse
   <p class="popup-text"></p>
 </div>
 `
-// Manually set Leaflet default marker icon and shadow
-delete L.Icon.Default.prototype._getIconUrl
-
-L.Icon.Default.mergeOptions({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+// Create custom marker to ensure always available.
+const customMarkerIcon = new L.Icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [30, 40], // Size of icon
+  iconAnchor: [15, 40], // The point of the marker
+  popupAnchor: [0, -40], // Where to place the pop up
+  shadowSize: [30, 30], // Size of shadow
+  shadowAnchor: [10, 32] // Where to place shadow
 })
 
 customElements.define('swimmingarea-element',
@@ -108,8 +87,9 @@ customElements.define('swimmingarea-element',
       this.popup = this.shadowRoot.querySelector('.popup')
       this.popupText = this.shadowRoot.querySelector('.popup-text')
 
+      // Instances to abortController and Leaflet map with initial state
+      this.abortController = null
       this.theMap = null
-      this.fetch = null
     }
 
     /**
@@ -124,7 +104,7 @@ customElements.define('swimmingarea-element',
         // Check if added text in the input field.
         if (searchText) {
           try {
-            // Send the search query to Nominatim, encode it.
+            // Send the search query to Nominatim API, encode it.
             const searchLocation = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchText)}`)
 
             // Parse the response.
@@ -147,6 +127,7 @@ customElements.define('swimmingarea-element',
           }
         }
       })
+
       // Listen for 'Enter'-key and search for the position.
       this.searchInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
@@ -157,34 +138,38 @@ customElements.define('swimmingarea-element',
 
     /**
      * Display a Leaflet-map based on the position of the user.
-     * Call displayPlaygrounds() to add markers for each found playground on the map.
+     * Call displayPlaygrounds() to fetch and add markers for each found playground on the map.
      *
      * @param {object} coordinates - The user's coordinates.
      * @param {number} coordinates.lat - Latitude.
      * @param {number} coordinates.lon - Longitude.
      */
     async displayMap ({ lat, lon }) {
+      // Abort any ongoing fetch to avoid race conditions.
       if (this.abortController) {
         this.abortController.abort()
       }
 
+      // Create a new AbortController for the current request.
       this.abortController = new AbortController()
       const signal = this.abortController.signal
 
-      // Mark this position as the one the user just requested.
+      // Collect currently requested coordinates.
       const requestedCoords = `${lat},${lon}`
       this.currentTargetCoords = requestedCoords
 
       this.showPopup('Hämtar badplatser. Det kan ta en liten stund..')
 
+      // Validate the input coordinates.
       if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
         this.showPopup('Kunde inte visa kartan.')
         return
       }
 
       try {
+        // If no map, create and initialize it.
         if (!this.theMap) {
-        // Create a Leaflet map and attach it to the DOM-element "this.playgroundMap"
+        // Create a Leaflet map and attach it to the DOM-element "this.swimmingAreaMap"
         // Center the map around the users coordinates and with a 15 level zoom.
           this.theMap = L.map(this.swimmingAreaMap).setView([lat, lon], 15)
 
@@ -193,6 +178,7 @@ customElements.define('swimmingarea-element',
             attribution: '&copy; OpenStreetMap contributors'
           }).addTo(this.theMap)
         } else {
+          // If already initialized, just update the view.
           this.theMap.setView([lat, lon], 15)
 
           // Remove previous added markers, but keep the tiles.
@@ -202,18 +188,20 @@ customElements.define('swimmingarea-element',
         }
 
         // Create the user position marker.
-        this.userPosition = L.marker([lat, lon])
+        this.userPosition = L.marker([lat, lon], { icon: customMarkerIcon })
           .addTo(this.theMap)
           .bindPopup('Du är här!') // Display a pop-up when clicked on.
           .openPopup() // Open pop-up.
 
-        // Display found swimming areas on map.
-        await this.displaySwimmingAreas(lat, lon, signal)
-
+        // Prevent fetch if new coordinates.
         if (this.currentTargetCoords !== requestedCoords) {
           return
         }
 
+        // Display found swimming areas on map.
+        await this.displaySwimmingAreas(lat, lon, signal)
+
+        // Wait before resizing map to ensure it renders correctly.
         setTimeout(() => {
           this.theMap.invalidateSize()
         }, 200)
@@ -223,15 +211,15 @@ customElements.define('swimmingarea-element',
     }
 
     /**
-     * Fetches and displays markers for all found swimming areas nearby the user.
+     * Fetches and displays markers on the map for all found swimming areas nearby the user.
      *
      * @param {number} lat Latitude coordinate of the user.
      * @param {number} lon Longitude coordinate of the user.
-     * @param {AbortSignal} signal Used to abort fetch-calls.
+     * @param {AbortSignal} signal Used to abort fetch-requests.
      */
     async displaySwimmingAreas (lat, lon, signal) {
       try {
-        // API URL-build based on enviroment.
+        // API URL-build based on environment.
         let theUrl = ''
         if (import.meta.env.MODE === 'development') {
           theUrl = `http://localhost:5000/api/v1/swimmingareas?lat=${lat}&lon=${lon}`
@@ -239,7 +227,7 @@ customElements.define('swimmingarea-element',
           theUrl = `https://cscloud8-46.lnu.se/api/v1/swimmingareas?lat=${lat}&lon=${lon}`
         }
 
-        // Fetch data of swimming areas from backend.
+        // Fetch list of swimming areas from backend.
         const getSwimmingAreas = await fetch(theUrl, { signal })
         const swimmingAreas = await getSwimmingAreas.json()
 
@@ -253,7 +241,7 @@ customElements.define('swimmingarea-element',
           const placeLat = swimmingArea.lat
           const placeLon = swimmingArea.lon
 
-          // Create pop-ups for found swimming areas and include the name, address and direction-link to the swimming area.
+          // Create pop-ups for found swimming areas and include the name, address and direction-link.
           const swimmingAreaPopUp = document.createElement('div')
           const nameSwimmingArea = document.createElement('strong')
           nameSwimmingArea.textContent = name
@@ -271,13 +259,14 @@ customElements.define('swimmingarea-element',
           directionLink.textContent = 'Vägbeskrivning'
           directionLink.href = `https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${placeLat},${placeLon}`
           directionLink.target = '_blank'
-          directionLink.rel = 'noopener noreferrer' // Security
+          directionLink.rel = 'noopener noreferrer' // Security measure when opening link in new tab, prevents access to window.opener and referrer info.
           swimmingAreaPopUp.appendChild(directionLink)
 
+          // Extend map bounds to include the swimming areas.
           bounds.extend([placeLat, placeLon])
 
           // Add each marker to the map.
-          L.marker([placeLat, placeLon])
+          L.marker([placeLat, placeLon], { icon: customMarkerIcon })
             .addTo(this.theMap)
             .bindPopup(swimmingAreaPopUp)
         }
@@ -303,7 +292,7 @@ customElements.define('swimmingarea-element',
 
       setTimeout(() => {
         this.popup.classList.remove('display')
-      }, 2000)
+      }, 3000)
     }
 
     /**
@@ -313,6 +302,11 @@ customElements.define('swimmingarea-element',
     disconnectedCallback () {
       if (this.abortController) {
         this.abortController.abort()
+      }
+
+      if (this.theMap) {
+        this.theMap.remove()
+        this.theMap = null
       }
     }
   })

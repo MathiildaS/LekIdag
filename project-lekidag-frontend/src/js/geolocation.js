@@ -1,6 +1,6 @@
 /**
- * Returns the coordinates of the user.
- * If no available location, Stockholm is used.
+ * Returns the coordinates of the user using Geolocation API.
+ * If no available location, Stockholm is used as fallback.
  *
  * @returns {Promise} The coordinates of the user.
  */
@@ -13,7 +13,7 @@ export async function getUserLocation () {
     return sthlm
   }
 
-  // Return a promise that resolves to the users coordinates or Stockholms coordinates.
+  // Return a promise that resolves to the users coordinates.
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition((position) => {
       resolve({
@@ -21,11 +21,13 @@ export async function getUserLocation () {
         lon: position.coords.longitude
       })
     },
+    // Fallback to Stockholm.
     (error) => {
       console.log('Geolocation failed', error)
       resolve(sthlm)
     },
     {
+      // Request most accurate position, wait before failing and don't allow cached position
       enableHighAccuracy: true,
       timeout: 10000,
       maximumAge: 0
