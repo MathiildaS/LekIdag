@@ -35,7 +35,6 @@ craftsTemplate.innerHTML = `
     flex-direction: column;
     align-items: center;
     text-align: center;
-    color: #E89E69;
   }
 </style>
 <div class="wrapper">
