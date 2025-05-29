@@ -35,12 +35,11 @@ challengesTemplate.innerHTML = `
     flex-direction: column;
     align-items: center;
     text-align: center;
-    color: #E89E69;
   }
 </style>
 <div class="wrapper">
 <div class="age">
-  <h2>Här kan du och ditt barn anta dagens utmaning!</h2>
+  <h2>Här kan du och ditt barn anta en utmaning!</h2>
   <p>Välj vilken åldersgrupp utmaningen ska vara anpassad för</p>
   <div class="age-buttons"></div>
 </div>

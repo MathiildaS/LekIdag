@@ -128,7 +128,7 @@ export const sharedStyles = `
     font-size: 1.3rem;
     font-weight: 400;
     background-color: #fffef9;
-    color: #d88c66;
+    color: #6c2400;
     padding: 1.5rem 2rem;
     border-radius: 16px;
     border-left: 4px solid rgba(216, 140, 102, 0.69);
@@ -136,6 +136,10 @@ export const sharedStyles = `
     max-width: 700px;
     margin: 0 auto 2rem auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .solution h3 {
+  color: #d88c66;
   }
 
   ol {
