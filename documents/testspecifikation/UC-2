@@ -1,0 +1,517 @@
+
+# UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Spårbarhet**: K-2
+
+**Precondition:** Uppkoppling till MongoDB Atlas som har ett antal dokument med pyssel sparade.
+
+**Postcondition**: Att ett slumpat pyssel presenteras för användaren, baserat på den ålder och plats användaren valt.
+
+**Huvudscenarie**
+
+1. Startar när användaren klickar på knappen "Slumpa ett pyssel" i menyn.
+2. Användaren väljer mellan vilket åldersspann pysslet ska passa.
+3. Användaren väljer om pysslet ska ske inomhus eller utomhus.
+4. Ett slumpat pyssel baserat på valda parametrar visas för användaren.
+
+## Manuella testfall
+
+### TC2.0 - Verifiera MongoDB Atlas anslutning lokalt
+
+**Krav-ID:** K-0.4
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Beroenden:** K-2.1
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Huvudscenarie:** Anslutningen lyckas och servern startar.
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Kontrollera loggmeddelanden.
+
+**Förväntat resultat**
+
+Loggmeddelande som säger att anslutningen lyckades och att servern körs på [http://localhost:5000](http://localhost:5000)
+
+---
+
+### TC2.1.1 - Testa API via Postman (lokalt)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4
+
+**Beroenden:** K-2.1
+
+**Huvudscenarie:** Bli presenterad med ett slumpat pyssel vid anrop till API med angiven ålder och plats.
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Postman, Webbläsare
+
+**Indata:**
+
+* **Key:** age **Value:** 0-1
+* **Key:** location **Value**: Inomhus
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök Postman Agent.
+5. Skicka en GET-förfrågan till `http://localhost:5000/api/v1/crafts/random`
+6. Fyll i följande parametrar under fliken params:
+
+   **Key**: age **Value:** 0-1
+
+   **Key**: location **Value**: Inomhus
+7. Skicka förfrågan.
+
+**Förväntat resultat**
+
+Statuskod 200 och ett JSON-objekt med följande fält:
+
+title, instructions, age och location.
+
+---
+
+### TC2.1.2 - Testa API via Postman (produktionsmiljö)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4
+
+**Beroenden:** K-2.1
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Bli presenterad med ett slumpat pyssel vid anrop till API med angiven ålder och plats i den driftsatta miljön.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Postman, Webbläsare
+
+**Indata:**
+
+* **Key:** age **Value:** 0-1
+* **Key:** location **Value**: Inomhus
+
+**Steg**
+
+1. Besök Postman
+2. Skicka en GET-förfrågan till [https://cscloud8-46.lnu.se/api/v1/crafts/random](https://cscloud8-46.lnu.se/api/v1/games/random)
+3. Fyll i följande parametrar under fliken params:
+
+   **Key:** age **Value**: 0-1
+
+   **Key:** location **Value:** Inomhus
+4. Skicka förfrågan.
+
+**Förväntat resultat**
+
+Statuskod 200 och ett JSON-objekt med följande fält:
+
+title, instructions, age och location.
+
+---
+
+### TC2.2.1 - Testa bli presenterad ett pyssel (Lokalt)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Bli presenterad med ett slumpat pyssel, baserat på valda parametrar, efter tre klick.
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+6. Klicka på knappen "0-1" för att välja ålder.
+7. Klicka på knappen "Inomhus" för att välja plats.
+
+**Förväntat resultat**
+
+Ett pyssel presenteras med titel och instruktioner.
+
+---
+
+### TC2.2.2 - Testa bli presenterad ett pyssel (Produktionsmiljö)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Huvudscenarie:** Bli presenterad med ett slumpat pyssel, baserat på valda parametrar, efter tre klick.
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+3. Klicka på knappen "0-1" för att välja ålder.
+4. Klicka på knappen "Inomhus" för att välja plats.
+
+**Förväntat resultat**
+
+Ett pyssel presenteras med titel och instruktioner.
+
+---
+
+### TC2.3.1 - Testa slumpmässig funktion (Lokalt)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Bli presenterad med ett nytt pyssel efter att ha blivit presenterad med ett första pyssel.
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+6. Klicka på knappen "0-1" för att välja ålder.
+7. Klicka på knappen "Inomhus" för att välja plats.
+8. Klicka på knappen "Slumpa ett nytt pyssel!" som visas nedanför det befintliga pysslets instruktioner.
+
+**Förväntat resultat**
+
+Ett nytt pyssel presenteras med titel och instruktioner.
+
+---
+
+### TC2.3.2 - Testa slumpmässig funktion (Produktionsmiljö)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Huvudscenarie:** Bli presenterad med ett nytt pyssel efter att ha blivit presenterad med ett första pyssel.
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+3. Klicka på knappen "0-1" för att välja ålder.
+4. Klicka på knappen "Inomhus" för att välja plats.
+5. Klicka på knappen "Slumpa ett nytt pyssel!" som visas nedanför det befintliga pysslets instruktioner.
+
+**Förväntat resultat**
+
+Ett nytt pyssel presenteras med titel och instruktioner.
+
+---
+
+### TC2.4.1 - Testa funktionen att börja om (Lokalt)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Användaren ska kunna börja om och välja nya parametrar efter att ha blivit presenterad med ett pyssel eller direkt via knappen "Slumpa ett pyssel" i menyn.
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+6. Klicka på knappen "0-1".
+7. Klicka på knappen "Inomhus"
+8. Klicka på knappen "Börja om från början!" som visas nedanför det befintliga pysslets instruktioner.
+
+**Förväntat resultat**
+
+Alternativ att välja ålder och plats visas igen.
+
+---
+
+### TC2.4.2 - Testa funktionen att börja om (Produktionsmiljö)
+
+**Use case**: UC-2 - Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.5, K-2.6
+
+**Huvudscenarie:** Användaren ska kunna börja om och välja nya parametrar efter att ha blivit presenterad med ett pyssel eller direkt via knappen "Slumpa ett pyssel" i menyn.
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Klicka på knappen "Slumpa ett pyssel" i menyn i headern.
+3. Klicka på knappen "0-1".
+4. Klicka på knappen "Inomhus"
+5. Klicka på knappen "Börja om från början!" som visas nedanför det befintliga pysslets instruktioner.
+
+**Förväntat resultat**
+
+Alternativ att välja ålder och plats visas igen.
+
+---
+
+## Automatiserade testfall
+
+### **AC2.1.1 - Hämta slumpat pyssel med matchande data (lokalt)**
+
+**Use case:** UC-2 – Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4, K-2.5
+
+**Huvudscenario:** Databas returnerar ett pyssel som matchar angiven ålder och plats.
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall som hanterar mockning av pyssel i databas finns i `craftController.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs och observera resultatet.
+
+**Förväntat resultat:**\
+Testet passerar och bekräftar status kod 200 och ett JSON-objekt med fälten title och instructions som matchar det simulerade pysslet.
+
+---
+
+### **AC2.1.2 - Hämta slumpat pyssel med matchande data (produktionsmiljö)**
+
+**Use case:** UC-2 – Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4, K-2.5
+
+**Huvudscenario:** Databas returnerar ett pyssel som matchar angiven ålder och plats.
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att rätt felmeddelande presenteras.
+
+**Precondition**:
+
+* Projektet är pushat till GitLab
+* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* `jest.config.js` och `test/`-mapp är inkluderade i repo
+* Testfall som hanterar mockning av pyssel i databas finns i `craftController.test.js`.
+* Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
+
+**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Gör en test-ändring i koden.
+4. Commita och pusha ändringen till GitLab.
+5. Observera pipeline steget `backend-test` GitLab.
+
+**Förväntat resultat:**\
+Testet passerar och bekräftar status kod 200 och ett JSON-objekt med fälten title och instructions som matchar det simulerade pysslet.
+
+---
+
+### **AC2.2.1 - Testa tom databas och felmeddelande (lokalt)**
+
+**Use case:** UC-2 – Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4, K-2.7
+
+**Huvudscenario:** Inga pysel hittas i databasen för angivna parametrar.
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall som hanterar mockning av tom databas finns i `craftController.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs och observera resultatet.
+
+**Förväntat resultat:**\
+Testet passerar och bekräftar att fel hanteras korrekt. Status är 404 och resultatet innehåller { message: "No matching craft found" }.
+
+---
+
+### **AC2.2.2 - Testa tom databas och felmeddelande (produktionsmiljö)**
+
+**Use case:** UC-2 – Slumpa ett pyssel baserat på ålder och plats
+
+**Krav-ID:** K-2.2, K-2.3, K-2.4, K-2.7
+
+**Huvudscenario:** Inget pyssel hittas i databasen för angivna parametrar.
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att rätt felmeddelande presenteras.
+
+**Precondition**:
+
+* Projektet är pushat till GitLab
+* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* `jest.config.js` och `test/`-mapp är inkluderade i repo
+* Testfall som hanterar mockning av tom databas finns i `craftController.test.js`.
+* Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
+
+**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Gör en test-ändring i koden.
+4. Commita och pusha ändringen till GitLab.
+5. Observera pipeline steget `backend-test` GitLab.
+
+**Förväntat resultat:**\
+Testet passerar och bekräftar att fel hanteras korrekt. Status är 404 och resultatet innehåller { message: "No matching craft found" }.

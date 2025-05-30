@@ -1,0 +1,242 @@
+
+# UC-4 - Visa väder baserat på användarens plats
+
+**Spårbarhet**: K-4
+
+**Precondition:** Användaren har besökt sidan https://cscloud8-46.lnu.se och gett (eller nekat) tillstånd att dela plats
+
+**Postcondition**: En väderprognos visas för användaren.
+
+**Huvudscenarie**
+
+1. Startar när användaren besöker webbsidan https://cscloud8-46.lnu.se.
+2. Användaren väljer att tillåta eller neka platsdelning.
+3. Om användaren tillåter platsdelning visas det lokala vädret med en ikon, beskrivande text av vädret, temperatur och plats.
+4. Om användaren nekar platsdelning visas det lokala vädret för Stockholm, med en ikon, beskrivande text av vädret, temperatur och plats.
+5. Om ett fel uppstår och vädret inte kan hämtas, visas ett felmeddelande.
+
+## Manuella testfall
+
+### TC4.1.1 - Hämta väder med tillåten platsdelning (lokalt)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.2, K-4.3, K-4.4
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-4.1, K-4.2, K-4.3
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Vädret laddas korrekt och visar det lokala vädret utifrån användarens plats.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Ge tillåtelse att dela plats.
+6. Vänta tills vädret laddas och presenteras.
+
+**Förväntat resultat**
+
+Vädret presenteras i en sektion med en väderikon, temperatur, textbeskrivning av vädret och användarens plats.
+
+---
+
+### TC4.1.2 - Hämta väder med tillåten platsdelning (produktionsmiljö)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.3, K-4.4, K-4.5
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-8, K-4.1, K-4.3
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Vädret laddas korrekt och visar det lokala vädret utifrån användarens plats.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besökhttps://cscloud8-46.lnu.se i webbläsaren.
+2. Ge tillåtelse att dela plats.
+3. Vänta tills vädret laddas och presenteras.
+
+**Förväntat resultat**
+
+Vädret presenteras i en sektion med en väderikon, temperatur, textbeskrivning av vädret och användarens plats.
+
+---
+
+### TC4.2.1 - Hämta väder med nekad platsdelning (lokalt)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.3, K-4.4, K-4.5
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-4.1, K-4.3
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Vädret laddas korrekt och visar det lokala vädret för Stockholm.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Neka tillåtelse att dela plats.
+6. Vänta tills vädret laddas och presenteras.
+
+**Förväntat resultat**
+
+Vädret presenteras i en sektion med en väderikon, temperatur, textbeskrivning av vädret och Stockholm som plats.
+
+---
+
+### TC4.2.2 - Hämta väder med nekad platsdelning (produktionsmiljö)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.3, K-4.4, K-4.5
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-8, K-4.1, K-4.3
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Vädret laddas korrekt och visar det lokala vädret för Stockholm.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Neka att dela plats.
+3. Vänta tills vädret laddas och presenteras.
+
+**Förväntat resultat**
+
+Vädret presenteras i en sektion med en väderikon, temperatur, textbeskrivning av vädret och Stockholm som plats.
+
+## Automatiserade testfall
+
+### AC4.1.1 - Visa felmeddelande om vädret inte kan hämtas (lokalt)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.3, K-4.6
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-4.1, K-4.3
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Backend försöker hämta väderdata, men OpenWeatherMap returnerar ett fel.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall som hanterar fel från väder-API finns i `weatherController.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet för felhantering i väderhämtning ska passera och visa
+
+---
+
+### AC4.1.2 - Visa felmeddelande om vädret inte kan hämtas (produktionsmiljö)
+
+**Krav-ID:** K-0.1, K-0.2, K-0.3, K-4.1, K-4.3, K-4.6
+
+**Use case**: UC-4 - Visa väder baserat på användarens plats
+
+**Beroenden:** K-4.1, K-4.3
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att rätt felmeddelande presenteras.
+
+**Precondition**:
+
+* Projektet är pushat till GitLab
+* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* `jest.config.js` och `test/`-mapp är inkluderade i repo
+* Testfall som mockar fel finns i `weatherController.test.js`
+* Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
+
+**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Gör en test-ändring i koden.
+4. Commita och pusha ändringen till GitLab.
+5. Observera pipeline steget `backend-test` GitLab.
+
+**Förväntat resultat**
+
+Testet passerar och bekräftar att fel hanteras korrekt.

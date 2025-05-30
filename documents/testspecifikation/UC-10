@@ -1,0 +1,140 @@
+
+# UC-10 - Design och responsivitet
+
+**Spårbarhet**: K-10
+
+**Precondition:** Användaren har gått in på webbsidan https://cscloud8-46.lnu.se/.
+
+**Postcondition**: Att webbsidans innehåll anpassar sig efter val av skärmstorlek.
+
+**Huvudscenarie:** Startar när användaren besöker sidan och ändrar fönsterstorleken. 
+
+Innehållet så som text, knappar, kartor och position av andra element ska anpassa sig till den nya storleken på ett följsamt sätt.
+
+## Manuella testfall
+
+### TC10.1 - Verifiera att sidan anpassar sig efter en mobilskärm på fysisk mobil
+
+**Use case**: UC-10
+
+**Krav-ID:** K-10.1
+
+**Beroenden:** K-0.3
+
+**Miljö**: Webbläsare på mobiltelefon
+
+**Precondition:** Användaren öppnar webbsidan från en mobil.
+
+**Verktyg**: Mobiltelefon
+
+**Steg:**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/ på mobilen
+2. Navigera till "Hitta din närmsta lekplats"
+
+**Förväntat resultat:** En sökruta med tillhörande knapp och en karta visas, i ett format som är anpassat efter skärmstorleken.
+
+Karta, sökruta och knappar är vertikalt staplade och passar skärmen utan scroll i sidled.
+
+---
+
+### TC10.2 - Verifiera att sidan anpassar sig efter olika skärmar via webbläsaren
+
+**Use case**: UC-10
+
+**Krav-ID:** K-10.1
+
+**Beroenden:** K-0.3
+
+**Miljö**: Webbläsare
+
+**Precondition:** Användaren besöker webbsidan https://cscloud8-46.lnu.se/
+
+**Steg:**
+
+1. Högerklicka på sidan och navigera till "Följsamt designläge" eller tryck och håll in knapparna "Ctrl + Shift + M" 
+2. I menyn ovanför webbsidan skriv in följande storlek: 375 x 600 (mobil)
+3. Se hur webbfönstret ändrar storlek och observera innehållet.
+4. I menyn ovanför webbsidan skriv in följande storlek: 768 x 1024 (surfplatta)
+5. Se hur webbfönstret ändrar storlek och observera innehållet.
+6. I menyn ovanför webbsidan skriv in följande storlek: 1024 x 768 (laptop)
+
+**Förväntat resultat:** Webbsidans innehåll anpassar sig efter den nya storleken. 
+
+Se hur knappar ändrar storlek och staplas på varandra för mindre skärmar. Observera att loggan försvinner för mobiler.
+
+Väderkomponenten lägger sig under menyknapparna. Texten trycks ihop.
+
+---
+
+### TC10.3 - Verifiera att komponenter på sidan visas responsivt
+
+**Use case**: UC-10
+
+**Krav-ID:** K-10.2
+
+**Beroenden:** K-1.5, K-2.5, K-3.4, K-4.4, K-5.7, K-6.2, K-6.5, K-7.6, K-9.7
+
+**Miljö**: Webbläsare
+
+**Precondition:** Användaren besöker webbsidan https://cscloud8-46.lnu.se/
+
+**Steg**
+
+1. Högerklicka på sidan och navigera till "Följsamt designläge" eller tryck och håll in knapparna "Ctrl + Shift + M"
+2. I menyn ovanför webbsidan skriv in följande storlek: 375 x 600 (mobil)
+3. Se hur webbfönstret ändrar storlek och hur innehållet anpassas.
+4. I menyn på webbsidan, navigera till "Slumpa ett pyssel"
+5. Observera hur innehållet ser ut för meny, väder, knappar för att välja ålder.
+6. I menyn ovanför webbsidan skriv in följande storlek: 768 x 1024 (surfplatta)
+7. I menyn på webbsidan, navigera till "Hitta din närmsta badplatsl"
+8. Observera hur innehållet ser ut för meny, väder, sökruta samt karta.
+
+**Förväntat resultat:** Alla komponenter renderas i lämplig storlek.
+
+Karta, väder och instruktioner visas korrekt utan överlappning eller felaktig position
+
+---
+
+### TC10.4 - Verifiera layout och design
+
+**Use case**: UC-10
+
+**Krav-ID:** K-10.3
+
+**Beroenden:** K-0.3
+
+**Miljö**: Webbläsare
+
+**Precondition**: Användaren besöker webbsidan https://cscloud8-46.lnu.se/
+
+**Steg**
+
+1. Granska typsnitt, logga, färgval och utseende.
+2. Klicka på "Anta utmaning" i menyn.
+3. Klicka på ålder "2-3".
+
+**Förväntat resultat:** Typsnitt och färgval är konsekvent använda över hela sidan. 
+
+Instruktioner är lättlästa och presenterade på ett lekfullt sätt.
+
+---
+
+### TC10.5 - Verifiera startsidans utseende
+
+**Use case**: UC-10
+
+**Krav-ID:** K-10.4
+
+**Beroenden:** K-0.3
+
+**Miljö**: Webbläsare
+
+**Precondition**: Användaren besöker webbsidan https://cscloud8-46.lnu.se/ och har inte klickat vidare någonstans.
+
+**Steg**
+
+1. Klicka på "Slumpa en lek"
+2. Klicka på loggan "LekIdag"
+
+**Förväntat resultat:** Startsidan ska visas efter klick på loggan. Startsidan visar logga, meny, väder, välkomsttext och information.

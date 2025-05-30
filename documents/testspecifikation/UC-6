@@ -1,0 +1,838 @@
+
+# UC-6 - Användarhantering
+
+**Spårbarhet**: K-6
+
+**Precondition:**
+
+* Användaren har besökt sidan https://cscloud8-46.lnu.se och MongoDB Atlas är korrekt ansluten.
+* JWT-konfiguration är aktiv via miljövariabler (.env eller GitLab CI/CD)
+
+**Postcondition**:
+
+* En besökare av webbsidan kan registrera sig och sparas i databasen.
+* Användare kan logga in, få en JWT och sedan använda funktioner som kräver autentisering
+* Användare kan uppdatera sin epost, sitt lösenord eller radera sitt konto.
+* Säkerhetsmekanismer som lösenordshashning och tokenförnyelse är korrekt implementerade
+
+**Huvudscenarie**
+
+ 1. Användaren klickar på "Registrera dig".
+ 2. Ett formulär visas där användaren fyller i e-post, användarnamn och lösenord.
+ 3. Backend kontrollerar om användaren redan finns.
+ 4. Om inte, hashas lösenordet och användaren sparas.
+ 5. Användaren loggar därefter in via "Logga in".
+ 6. Vid korrekt användarnamn/lösenord genereras en JWT och en refresh token.
+ 7. Den inloggade användaren kan gå till "Min profil" och:
+    * Ändra lösenord
+    * Ändra e-post
+    * Radera sitt konto
+ 8. Om JWT går ut används refresh token för att hämta ny.
+ 9. Användaren kan logga ut och refresh token blir ogiltig.
+10. Vid felaktiga inloggnings eller registreringsförsök visas tydliga felmeddelanden
+
+## Manuella testfall
+
+### TC6.1.1 - Registrera användare med upptaget användarnamn (lokalt)
+
+**Krav-ID:** K-6.2, K-6.3, K-6.12
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** En användare försöker registrera sig med ett användarnamn som redan finns i databasen. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **E-post:** test@test.se
+* **Förnamn:** Test
+* **Efternamn:** User
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Registrera dig"
+6. Fyll i formuläret med indata presenterad ovan.
+7. Klicka på knappen "Registrera"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Användarnamn upptaget. Vänligen välj ett annat." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.1.2 - Registrera användare med upptaget användarnamn (produktionsmiljö)
+
+**Krav-ID:** K-6.2, K-6.3, K-6.12
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** En användare försöker registrera sig med ett användarnamn som redan finns i databasen. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **E-post:** test@test.se
+* **Förnamn:** Test
+* **Efternamn:** User
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Registrera dig"
+3. Fyll i formuläret med indata presenterad ovan.
+4. Klicka på knappen "Registrera"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Användarnamn upptaget. Vänligen välj ett annat." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.2.1 - Registrera användare med upptagen e-postadress (lokalt)
+
+**Krav-ID:** K-6.2, K-6.3, K-6.12
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** En användare försöker registrera sig med en e-postadress som redan finns i databasen. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser1
+* **E-post:** test@test.se
+* **Förnamn:** Test
+* **Efternamn:** User
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Registrera dig"
+6. Fyll i formuläret med indata presenterad ovan.
+7. Klicka på knappen "Registrera"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Denna e-post addres är redan registrerad." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.2.2 - Registrera användare med upptaget e-postadress (produktionsmiljö)
+
+**Krav-ID:** K-6.2, K-6.3, K-6.12
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** En användare försöker registrera sig med en e-postadress som redan finns i databasen. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser1
+* **E-post:** test@test.se
+* **Förnamn:** Test
+* **Efternamn:** User
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Registrera dig"
+3. Fyll i formuläret med indata presenterad ovan.
+4. Klicka på knappen "Registrera"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Denna e-post addres är redan registrerad." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.3.1 - Logga in användare med fel lösenord (lokalt)
+
+**Krav-ID:** K-6.5, K-6.11
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Användaren anger ett felaktigt lösenord. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 123
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Logga in"
+6. Ett inloggningsformulär visas för användaren.
+7. Fyll i användarnamn och lösenord enligt indata.
+8. Klicka på knappen "Logga in"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Något gick fel vid inloggning. Försök igen." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.3.2 - Logga in användare med fel lösenord (produktionsmiljö)
+
+**Krav-ID:** K-6.5, K-6.11
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Användaren anger ett felaktigt lösenord. Ett felmeddelande visas.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 123
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Logga in"
+3. Ett inloggningsformulär visas för användaren.
+4. Fyll i användarnamn och lösenord enligt indata.
+5. Klicka på knappen "Logga in"
+
+**Förväntat resultat**
+
+Ett pop-up meddelande visas "Något gick fel vid inloggning. Försök igen." Användaren har möjlighet att redigera formuläret.
+
+---
+
+### TC6.4.1 - Se profil (lokalt)
+
+**Krav-ID:** K-6.5, K-6.6
+
+**Use case**: UC-6 - Användarhantering
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** En inloggad användare klickar på "Min profil" och får se sina uppgifter tillsammans med möjlighet att uppdatera eller radera konto.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Logga in"
+6. Ett inloggningsformulär visas för användaren.
+7. Fyll i användarnamn och lösenord enligt indata.
+8. Klicka på knappen "Logga in"
+9. Klicka på knappen "Min profil"
+
+**Förväntat resultat**
+
+En profilsida visas med användarens uppgifter samt möjlighet att ändra lösenord, ändra e-postadress och radera konto.
+
+---
+
+### TC6.4.2 - Se profil (produktionsmiljö)
+
+**Krav-ID:** K-6.5, K-6.6
+
+**Use case**: UC-6 - Användarhantering
+
+**Beroenden:** En inloggad användare klickar på "Min profil" och får se sina uppgifter tillsammans med möjlighet att uppdatera eller radera konto.
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:**
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Logga in"
+3. Ett inloggningsformulär visas för användaren.
+4. Fyll i användarnamn och lösenord enligt indata.
+5. Klicka på knappen "Logga in"
+6. Klicka på knappen "Min profil"
+
+**Förväntat resultat**
+
+En profilsida visas med användarens uppgifter samt möjlighet att ändra lösenord, ändra e-postadress och radera konto.
+
+---
+
+## Automatiserade testfall
+
+### AC6.1.1 - Registrera en ny användare (lokalt)
+
+**Krav-ID:** K-6.1, K-6.2, K-6.4
+
+**Use case**: UC-6 - Användarhantering
+
+**Beroenden:**
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet passerar och en rapport visar att en användare har blivit registrerad.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet för registrering ska passera och visa statuskod 201 samt "Registreringen lyckades!"
+
+---
+
+### AC6.1.2 - Registrera en ny användare (produktionsmiljö)
+
+**Krav-ID:** K-6.1, K-6.2, K-6.4
+
+**Use case**: UC-6 - Användarhantering
+
+**Beroenden:**
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att en användare har blivit registrerad.
+
+**Precondition**:
+
+* Projektet är pushat till GitLab
+* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* `jest.config.js` och `test/`-mapp är inkluderade i repo
+* Testfall som mockar användarhantering finns i `userRouter.test.js`
+* Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
+
+**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Gör en test-ändring i koden.
+4. Commita och pusha ändringen till GitLab.
+5. Observera pipeline steget `backend-test` GitLab.
+
+**Förväntat resultat**
+
+Testet för registrering ska passera och visa statuskod 201 samt "Registreringen lyckades!"
+
+---
+
+### AC6.2.1 - Logga in befintlig användare (lokalt)
+
+**Krav-ID:** K-6.5, K-6.6
+
+**Use case**: UC-6 - Användarhantering
+
+**Beroenden:** K-6.1, K-6.4
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet passerar och en rapport visar att användaren kan logga in och ta emot JWT-token.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 samt innehåller både `accessToken` och `refreshToken`
+
+---
+
+### AC6.2.2 - Logga in befintlig användare (produktionsmiljö)
+
+**Krav-ID:** K-6.5, K-6.6
+
+**Use case**: UC-6 - Användarhantering
+
+**Beroenden:** K-6.1, K-6.4
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att användaren kan logga in och ta emot JWT-token.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public key.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 samt innehåller både `accessToken` och `refreshToken`
+
+---
+
+### AC6.3.1 - **Ändra lösenord som inloggad användare** (lokalt)
+
+**Krav-ID:** K-6.8, K-6.4\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.5, K-6.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet passerar och en rapport visar att lösenord har uppdaterats.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad med ett giltigt JWT-token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 samt meddelandet: "Lösenord har blivit uppdaterat!"
+
+---
+
+### AC6.3.2 - **Ändra lösenord som inloggad användare** (produktionsmiljö)
+
+**Krav-ID:** K-6.8, K-6.4\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.5, K-6.6
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att lösenord har uppdaterats.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public key.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad med ett giltigt JWT-token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 samt meddelandet: "Lösenord har blivit uppdaterat!"
+
+---
+
+### AC6.4.1 - **Ändra e-post som inloggad användare** (lokalt)
+
+**Krav-ID:** K-6.5, K-6.9\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet visar att e-postadressen uppdateras korrekt för en inloggad användare.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad med ett giltigt JWT-token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och meddelandet "Ny E-post adress registrerad."
+
+---
+
+### AC6.4.2 - **Ändra e-post som inloggad användare** (produktionsmiljö)
+
+**Krav-ID:** K-6.5, K-6.9\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.6
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att e-postadressen uppdateras korrekt för en inloggad användare.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public key.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad med ett giltigt JWT-token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Observera testresultatet i terminalen.
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och meddelandet "Ny E-post adress registrerad."
+
+---
+
+### AC6.5.1 - **Ändra e-post som inloggad användare** (lokalt)
+
+**Krav-ID:** K-6.7\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.6
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet visar att ett nytt access-token genereras utifrån ett giltigt refresh token.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är registrerad och har ett refresh token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Verifiera att nytt token returneras
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och ett nytt `accessToken` skickas i svaret
+
+---
+
+### AC6.5.2 - **Ändra e-post som inloggad användare** (produktionsmiljö)
+
+**Krav-ID:** K-6.7\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.6
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att ett nytt access-token genereras utifrån ett giltigt refresh token.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public key.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är registrerad och har ett refresh token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Verifiera att nytt token returneras
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och ett nytt `accessToken` skickas i svaret
+
+---
+
+### AC6.6.1 - **Logga ut användare och ogiltigförklara refresh token** (lokalt)
+
+**Krav-ID:** K-6.9\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.7
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Testet visar att användaren loggar ut och refresh-token ogiltigförklaras.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public nyckel.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad och har ett giltigt refresh token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Verifiera att nytt token returneras
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och meddelande "Du har blivit utloggad!"
+
+---
+
+### AC6.6.2 - **Logga ut användare och ogiltigförklara refresh token** (produktionsmiljö)
+
+**Krav-ID:** K-6.9\
+**Use case:** UC-6 - Användarhantering\
+**Beroenden:** K-6.7
+
+**Miljö:** CI/CD-pipeline i GitLab
+
+**Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att användaren loggar ut och refresh-token ogiltigförklaras.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig private och public key.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+* Testfall för användarhantering finns i `userRouter.test.js`.
+* Användaren är inloggad och har ett giltigt refresh token
+
+**Verktyg**: Visual Studio Code, Jest, Node.js, Supertest
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Kör följande kommando för att exekvera tester i backend-containern: `docker compose run --rm backend npm test`
+4. Vänta på att testerna körs klart.
+5. Verifiera att nytt token returneras
+
+**Förväntat resultat**
+
+Testet passerar och visar statuskod 200 och meddelande "Du har blivit utloggad!"
+
+---

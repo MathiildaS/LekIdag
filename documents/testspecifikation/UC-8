@@ -1,0 +1,96 @@
+
+# UC-8 - Verifiera driftsättning
+
+**Spårbarhet**: K-8
+
+**Precondition:** Grunden för applikationen är implementerad och redo att driftsättas.
+
+**Postcondition**: Applikationen är driftsatt i produktionsmiljö (CSCloud) och kan nås via HTTPS
+
+**Huvudscenarie**
+
+1. Webbsidan https://cscloud8-46.lnu.se öppnas i en webbläsare.
+2. Applikationen och dess innehåll laddas utan fel.
+
+## Manuella testfall
+
+### TC8.1 - Verifiera driftsättning på CSCloud
+
+**Krav-ID:** K-8.1, K-8.3
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* Projektet är deployat till CSCloud via GitLab CI/CD.
+* Docker Compose används för att köra containrarna.
+* `Dockerfile.production` för både frontend och backend är korrekt konfigurerade för produktionsmiljö.
+* `docker-compose.yml` och` docker-compose.production.yml` finns och är korrekt konfigurerad för produktionsmiljö.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Öppna https://cscloud8-46.lnu.se i webbläsare.
+2. Bekräfta att applikationen laddas utan fel.
+
+**Förväntat resultat**
+
+* Applikationen är nåbar via webbläsare.
+* Backend och frontend är igång i separata containrar på CSCloud via Docker Compose.
+
+---
+
+### TC8.2 - Verifiera HTTPS och giltigt SSL-certifikat
+
+**Krav-ID:** K-8.2
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* Projektet är deployat till CSCloud via GitLab CI/CD.
+* Docker Compose används för att köra containrarna.
+* `Dockerfile.production` för både frontend och backend är korrekt konfigurerade för produktionsmiljö.
+* `docker-compose.yml` och` docker-compose.production.yml` finns och är korrekt konfigurerad för produktionsmiljö.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Öppna https://cscloud8-46.lnu.se i en webbläsare.
+2. Klicka på låset i adressfältet.
+3. Kontrollera att anslutningen är säker och certifikatet är giltigt.
+
+**Förväntat resultat**
+
+* Sidan använder HTTPS.
+
+---
+
+### TC8.3 - Verifiera driftsättning via GitLab CI/CD
+
+**Krav-ID:** K-8.4
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition**:
+
+* `.gitlab-ci.yml` är korrekt konfigurerad för att köra pipeline med bygg, test och manuellt deploy-steg.
+* SSH-nycklar och miljövariabler är korrekt upplagda i GitLab.
+* Docker Compose används för att köra containrarna.
+* `Dockerfile.production` för både frontend och backend är korrekt konfigurerade för produktionsmiljö.
+* `docker-compose.yml` och` docker-compose.production.yml` finns och är korrekt konfigurerad för produktionsmiljö.
+
+**Verktyg**: GitLab CI/CD, Webbläsare
+
+**Steg**
+
+1. Gör en förändring i projektets kodbas.
+2. Commita och pusha ändringen till `main`-grenen i GitLab.
+3. Gå till GitLab --\> Project --\> CI/CD --\> Pipelines.
+4. Övervaka att pipeline startar automatiskt.
+5. Bekräfta att stegen `build`, `test` och `deploy` körs utan fel.
+6. Besök webbsidan https://cscloud8-46.lnu.se efter pipeline är klar.
+
+**Förväntat resultat:** Senaste förändring är synlig på https://cscloud8-46.lnu.se.

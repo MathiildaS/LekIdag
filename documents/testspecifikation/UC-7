@@ -1,0 +1,565 @@
+
+# UC-7 - Forumfunktionalitet
+
+**Spårbarhet**: K-7
+
+**Precondition:** Användaren har besökt sidan https://cscloud8-46.lnu.se.
+
+**Postcondition**: Ett forum med detaljer visas för användaren. Har denne loggat in visas möjlighet att skapa nytt inlägg. Har denne redan skrivit ett inlägg, visas möjlighet att ändra eller radera samma inlägg. Inlägg kan skapas, visas, ändras och raderas korrekt.
+
+**Huvudscenarie**
+
+1. Startar när användaren besöker webbsidan https://cscloud8-46.lnu.se.
+2. Användaren loggar in och klickar på "Forum" i menyn.
+3. Användaren kan se en lista över existerande inlägg och en knapp "Skapa nytt inlägg".
+4. Vid klick på knappen kan användaren skapa ett nytt inlägg med titel och brödtext.
+5. Om användaren går tillbaka till listan över existerande inlägg och klickar på ett inlägg visas en detaljvy med titel och brödtext, skapare, kategori och datum.
+6. Användare som är författare ser knappar för att redigera och radera.
+7. Sanering av formulärdata sker innan det sparas i databasen.
+8. Om ett fel uppstår och vid hämtning, skapande eller forumet inte kan visas, visas ett felmeddelande.
+
+## Manuella testfall
+
+### TC7.1.1 - Se forumöversikt (lokalt)
+
+**Krav-ID:** K-7.1, K-7.2, K-7.6
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Användaren klickar på knappen "Forum" i menyn och en tabell med rubrikerna författare, titel, kategori och datum visas samt listning av inlägg.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Forum" i menyn.
+
+**Förväntat resultat**
+
+En tabell med rubrikerna författare, titel, kategori och datum visas. Nedanför visas en lista med detaljer under dessa rubriker.
+
+---
+
+### TC7.1.2 - Se forumöversikt (produktionsmiljö)
+
+**Krav-ID:** K-7.1, K-7.2, K-7.6
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Användaren klickar på knappen "Forum" i menyn och en tabell med rubrikerna författare, titel, kategori och datum visas samt listning av inlägg.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Forum" i menyn.
+
+**Förväntat resultat**
+
+En tabell med rubrikerna författare, titel, kategori och datum visas. Nedanför visas en lista med detaljer under dessa rubriker.
+
+---
+
+### TC7.2.1 - Se enskilt inlägg (lokalt)
+
+**Krav-ID:** K-7.2, K-7.6
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-7.1
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Användaren klickar på en valfri rad i den synliga tabellen nedanför rubrikerna och en detaljerad vy visas över det specifika foruminlägget.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Klicka på knappen "Forum" i menyn.
+6. Klicka på en rad nedanför rubriken "Författare"
+
+**Förväntat resultat**
+
+En detaljerad vy visas över det specifika foruminlägget med titel, författare, kategori, datum och brödtext samt en knapp "Tillbaka till forumet" som tar användaren tillbaka till tabellen över inlägg..
+
+---
+
+### TC7.2.2 - Se enskilt inlägg (produktionsmiljö)
+
+**Krav-ID:** K-7.2, K-7.6
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-7.1
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Användaren klickar på en rad i tabellen nedanför rubrikerna och en detaljerad vy visas över det specifika foruminlägget.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Forum" i menyn.
+3. Klicka på en rad nedanför rubriken "Författare"
+
+**Förväntat resultat**
+
+En detaljerad vy visas över det specifika foruminlägget med titel, författare, kategori, datum och brödtext samt en knapp "Tillbaka till forumet" som tar användaren tillbaka till tabellen över inlägg.
+
+---
+
+### TC7.3.1 - Skapa inlägg som inloggad (lokalt)
+
+**Krav-ID:** K-7.3, K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** För en inloggad användare visas en knapp "Skapa nytt inlägg" ovanför tabellen över foruminlägg. Användaren klickar på den och ett formulär för att skapa ett nytt inlägg visas.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+ 1. Öppna project-lekidag i Visual Studio Code.
+ 2. Öppna ny terminal i Visual Studio Code.
+ 3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+ 4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+ 5. Klicka på knappen "Logga in"
+ 6. Skriv in givet användarnamn och lösenord ovan.
+ 7. Klicka på knappen "Forum" i menyn.
+ 8. Klicka på knappen "Skapa nytt inlägg" ovanför listan över foruminlägg.
+ 9. Fyll i valfri titel.
+10. Välj kategori "Lekar".
+11. Fyll i valfritt innehåll.
+12. Klicka på knappen "Publicera".
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägg publicerat!".
+
+Ett inlägg av "TestUser" har lagts till högst upp i tabellen med korrekt angiven titel, dagens datum och aktuell tid.
+
+---
+
+### TC7.3.2 - Skapa inlägg som inloggad (produktionsmiljö)
+
+**Krav-ID:** K-7.3, K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** För en inloggad användare visas en knapp "Skapa nytt inlägg" ovanför tabellen över foruminlägg. Användaren klickar på den och ett formulär för att skapa ett nytt inlägg visas.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Logga in"
+3. Skriv in givet användarnamn och lösenord ovan.
+4. Klicka på knappen "Forum" i menyn.
+5. Klicka på knappen "Skapa nytt inlägg" ovanför listan över foruminlägg.
+6. Fyll i valfri titel.
+7. Välj kategori "Lekar".
+8. Fyll i valfritt innehåll.
+9. Klicka på knappen "Publicera".
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägg publicerat!".
+
+Ett inlägg av "TestUser" har lagts till högst upp i tabellen med korrekt angiven titel, dagens datum och aktuell tid.
+
+---
+
+### TC7.4.1 - Ändra endast eget inlägg som inloggad (lokalt)
+
+**Krav-ID:** K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Endast egna inlägg kan redigeras och en knapp "Redigera inlägg" är synlig.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+ 1. Öppna project-lekidag i Visual Studio Code.
+ 2. Öppna ny terminal i Visual Studio Code.
+ 3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+ 4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+ 5. Klicka på knappen "Logga in"
+ 6. Skriv in givet användarnamn och lösenord ovan.
+ 7. Klicka på knappen "Forum" i menyn.
+ 8. Klicka på raden med "Mathilda" som författare i tabellen.
+ 9. Observera att endast en knapp "Tillbaka till forumet" visas.
+10. Klicka på raden med "TestUser" som författare i tabellen.
+11. Klicka på knappen "Redigera inlägg".
+12. Ändra till en ny valfri titel.
+13. Välj kategori "Allmänt".
+14. Klicka på knappen "Publicera"
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägg uppdaterat!" och överst i listan över foruminlägg syns Författare "TestUser" med ändrad titel och kategori "Allmänt", dagens datum och aktuell tid.
+
+---
+
+### TC7.4.2 - Ändra endast eget inlägg som inloggad (produktionsmiljö)
+
+**Krav-ID:** K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Endast egna inlägg kan redigeras och en knapp "Redigera inlägg" är synlig.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+ 1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+ 2. Klicka på knappen "Logga in"
+ 3. Skriv in givet användarnamn och lösenord ovan.
+ 4. Klicka på knappen "Forum" i menyn.
+ 5. Klicka på raden med "Mathilda" som författare i tabellen.
+ 6. Observera att endast en knapp "Tillbaka till forumet" visas.
+ 7. Klicka på raden med "TestUser" som författare i tabellen.
+ 8. Klicka på knappen "Redigera inlägg".
+ 9. Ändra till en ny valfri titel.
+10. Välj kategori "Allmänt".
+11. Klicka på knappen "Publicera"
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägg uppdaterat!" och överst i listan över foruminlägg syns Författare "TestUser" med ändrad titel och kategori "Allmänt", dagens datum och aktuell tid.
+
+---
+
+### TC7.5.1 - Radera endast eget inlägg som inloggad (lokalt)
+
+**Krav-ID:** K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Endast egna inlägg kan redigeras och en knapp "Radera inlägg" är synlig.
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+ 1. Öppna project-lekidag i Visual Studio Code.
+ 2. Öppna ny terminal i Visual Studio Code.
+ 3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+ 4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+ 5. Klicka på knappen "Logga in"
+ 6. Skriv in givet användarnamn och lösenord ovan.
+ 7. Klicka på knappen "Forum" i menyn.
+ 8. Klicka på raden med "Mathilda" som författare i tabellen.
+ 9. Observera att endast en knapp "Tillbaka till forumet" visas.
+10. Klicka på raden med "TestUser" som författare i tabellen.
+11. Klicka på knappen "Radera inlägg".
+12. Ett meddelande visas "Är du säker på att du vill radera detta inlägg?". Klicka på "OK"
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägget raderades!" och inlägget med Författare "TestUser" har tagits bort.
+
+---
+
+### TC7.5.2 - Radera endast eget inlägg som inloggad (produktionsmiljö)
+
+**Krav-ID:** K-7.4
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Beroenden:** K-6, K-7.1, K-7.2
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Endast egna inlägg kan redigeras och en knapp "Radera inlägg" är synlig.
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+
+**Steg**
+
+1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+2. Klicka på knappen "Logga in"
+3. Skriv in givet användarnamn och lösenord ovan.
+4. Klicka på knappen "Forum" i menyn.
+5. Klicka på raden med "Mathilda" som författare i tabellen.
+6. Observera att endast en knapp "Tillbaka till forumet" visas.
+7. Klicka på raden med "TestUser" som författare i tabellen.
+8. Klicka på knappen "Radera inlägg".
+9. Ett meddelande visas "Är du säker på att du vill radera detta inlägg?". Klicka på "OK"
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och ett pop-up meddelande visas "Inlägget raderades!" och inlägget med Författare "TestUser" har tagits bort.
+
+---
+
+### TC7.6.1 - Validera sanering av formulär (lokalt)
+
+**Krav-ID:** K-7.8
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Miljö**: Lokal utvecklingsmiljö via Docker Compose
+
+**Huvudscenarie:** Användaren försöker skicka ett inlägg med skriptkod
+
+**Precondition**:
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltig sträng till databas.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsare
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+* **Titel/Innehåll:** \<script\>
+
+**Steg**
+
+ 1. Öppna project-lekidag i Visual Studio Code.
+ 2. Öppna ny terminal i Visual Studio Code.
+ 3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+ 4. Besök [http://localhost:5173](http://localhost:5173) i webbläsaren.
+ 5. Klicka på knappen "Logga in"
+ 6. Skriv in givet användarnamn och lösenord ovan.
+ 7. Klicka på knappen "Forum" i menyn.
+ 8. Klicka på knappen "Skapa nytt inlägg"
+ 9. Skriv in given titel och innehåll enligt ovan.
+10. Klicka på knappen "Publicera"
+11. Bekräfta att \<script\> visas som text
+12. Klicka på raden som nyligen publicerades med "TestUser" som Författare.
+13. Klicka på knappen "Radera inlägg". Bekräfta "OK".
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och inlägget sparas utan att HTML exekveras dvs \<script\> visas som text.
+
+---
+
+### TC7.6.2 - Validera sanering av formulär (produktionsmiljö)
+
+**Krav-ID:** K-7.8
+
+**Use case**: UC-7 - Forumfunktionalitet
+
+**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Huvudscenarie:** Användaren försöker skicka ett inlägg med skriptkod
+
+**Precondition**:
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsaren
+
+**Indata:**
+
+* **Användarnamn:** TestUser
+* **Lösenord:** 1234567890
+* **Titel/Innehåll:** \<script\>
+
+**Steg**
+
+ 1. Besök https://cscloud8-46.lnu.se i webbläsaren.
+ 2. Klicka på knappen "Logga in"
+ 3. Skriv in givet användarnamn och lösenord ovan.
+ 4. Klicka på knappen "Forum" i menyn.
+ 5. Klicka på knappen "Skapa nytt inlägg"
+ 6. Skriv in given titel och innehåll enligt ovan.
+ 7. Klicka på knappen "Publicera"
+ 8. Bekräfta att \<script\> visas som text
+ 9. Klicka på raden som nyligen publicerades med "TestUser" som Författare.
+10. Klicka på knappen "Radera inlägg". Bekräfta "OK".
+
+**Förväntat resultat**
+
+Användaren återgår till vyn över listan med alla foruminlägg och inlägget sparas utan att HTML exekveras dvs \<script\> visas som text.

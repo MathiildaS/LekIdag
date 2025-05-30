@@ -1,0 +1,450 @@
+
+# UC-9 - Visa karta med närliggande badplatser
+
+**Spårbarhet**: K-9
+
+**Precondition:** Användaren har besökt webbsidan https://cscloud8-46.lnu.se/, valt att tillåta eller blockera platsdelning och klickat på meny-knappen "Hitta din närmsta badplats".
+
+**Postcondition**: En karta renderas och utgår ifrån användarens position med markörer för närliggande badplatser.
+
+**Huvudscenarie:** Startar när användaren klickar på knappen "Hitta din närmsta badplats" och en karta laddas. Om platsdelning är tillåten visas en markör för användarens aktuella position märkt "Du är här". Om platsdelning nekas visas Stockholm som utgångspunkt med markör "Du är här". Kartan uppdateras även med markörer för varje funnen badplats inom en viss radie. Varje markör kan klickas på för att se en pop up-ruta med platsinformation och vägbeskrivning. En sökfunktion ovanför kartan tillåter manuell platsinmatning som visar ett felmeddelande vid ogiltig sökning.
+
+## Manuella testfall
+
+### TC9.1.1 - Verifiera att kartan visas med tillåten platsdelning (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.0, K-9.1
+
+**Beroenden:** K-9.0
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Tillåt platsdelning.
+6. Klicka på knappen "Hitta din närmsta badplats"
+
+**Förväntat resultat:** En karta visas på sidan med en markör "Du är här" på användarens plats.
+
+---
+
+### TC9.1.2 - Verifiera att kartan visas med tillåten platsdelning (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.0, K-9.1
+
+**Beroenden:** K-8, K-9.0
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Tillåt platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+
+**Förväntat resultat:** En karta visas på sidan med en markör för användarens position med texten "Du är här".
+
+---
+
+### TC9.2.1 - Verifiera att kartan visas med nekad platsdelning (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.5
+
+**Beroenden:**
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Neka platsdelning.
+6. Klicka på knappen "Hitta din närmsta badplats"
+
+**Förväntat resultat:** En karta är synlig för användaren med en markör över Stockholm med texten "Du är här".
+
+---
+
+### TC9.2.2 - Verifiera att kartan visas med nekad platsdelning (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.5
+
+**Beroenden:** K-8
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Neka platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+
+**Förväntat resultat:** En karta är synlig för användaren med en markör över Stockholm med texten "Du är här".
+
+---
+
+### TC9.3.1 - Verifiera att badplatser markeras på kartan (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.2
+
+**Beroenden:** K-9.0, K-9.1, K-9.5
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+ 1. Öppna project-lekidag i Visual Studio Code.
+ 2. Öppna ny terminal i Visual Studio Code.
+ 3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+ 4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+ 5. Tillåt platsdelning.
+ 6. Klicka på knappen "Hitta din närmsta badplats"
+ 7. Bekräfta att markörer för badplatser visas runt din position.
+ 8. Klicka på "Rättigheter för [http://localhost:5173](http://localhost:5173)" bredvid sökfältet och kryssa "Tillåten tillfälligt".
+ 9. Refresha sidan
+10. Neka platsdelning.
+11. Bekräfta att markörer för badplatser visas över Stockholm.
+
+**Förväntat resultat:**
+
+* Vid tillåten platsdelning är en karta synlig för användaren med markörer för hittade badplatser nära användarens position.
+* Vid nekad platsdelning är en karta synlig för användaren med markörer för hittade badplatser runt Stockholm.
+
+---
+
+### TC9.3.2 - Verifiera att badplatser markeras på kartan (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande lekplatser
+
+**Krav-ID:** K-9.5
+
+**Beroenden:** K-8, K-9.0, K-9.1, K-9.5
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Tillåt platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+4. Bekräfta att markörer för badplatser visas runt din position.
+5. Klicka på "Rättigheter för https://cscloud8-46.lnu.se/" bredvid sökfältet och kryssa "Tillåten tillfälligt".
+6. Refresha sidan
+7. Neka platsdelning.
+8. Bekräfta att markörer för badplatser visas över Stockholm.
+
+**Förväntat resultat:**
+
+* Vid tillåten platsdelning är en karta synlig för användaren med markörer för hittade badplatser nära användarens position.
+* Vid nekad platsdelning är en karta synlig för användaren med markörer för hittade badplatser runt Stockholm.
+
+---
+
+### TC9.4.1 - Verifiera att en badplats presenteras med adress och länk till vägbeskrivning (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.6
+
+**Beroenden:** K-9.0, K-9.1, K-9.2, K-9.5
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Tillåt platsdelning.
+6. Klicka på knappen "Hitta din närmsta badplats"
+7. Bekräfta att markörer för badplatser visas runt din position.
+8. Klicka på valfri markör.
+
+**Förväntat resultat:** En popup ruta visas med namn på badplatsen, adress och länk till Google Maps med vägbeskrivning dit utifrån nuvarande position.
+
+---
+
+### TC9.4.2 - Verifiera att en badplats presenteras med adress och länk till vägbeskrivning (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande lekplatser
+
+**Krav-ID:** K-9.6
+
+**Beroenden:** K-8, K-9.0, K-9.1, K-9.2, K-9.5
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Tillåt platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+4. Bekräfta att markörer för badplatser visas runt din position.
+5. Klicka på valfri markör.
+
+**Förväntat resultat:** En popup ruta visas med namn på badplatsen, adress och länk till Google Maps med vägbeskrivning dit utifrån nuvarande position.
+
+---
+
+### TC9.5.1 - Verifiera sökfunktion (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.3
+
+**Beroenden:** K-9.0, K-9.1, K-9.2, K-9.5
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Tillåt platsdelning.
+6. Klicka på knappen "Hitta din närmsta badplats"
+7. Klicka på textfältet i sökrutan ovanför kartan och skriv "Kalmar"
+8. Klicka på knappen "Sök!"
+
+**Förväntat resultat:** Kartan centrerar över Kalmar och visar markör "Du är här" samt markörer för alla funna badplatser i närheten.
+
+---
+
+### TC9.5.2 - Verifiera sökfunktion (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande badplatser
+
+**Krav-ID:** K-9.3
+
+**Beroenden:** K-8, K-9.0, K-9.1, K-9.2, K-9.5
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Tillåt platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+4. Klicka på textfältet i sökrutan ovanför kartan och skriv "Kalmar"
+5. Klicka på knappen "Sök!"
+
+**Förväntat resultat:** Kartan centrerar över Kalmar och visar markör "Du är här" samt markörer för alla funna badplatser i närheten.
+
+---
+
+### TC9.6.1 - Verifiera att felmeddelande visas om position ej kan hittas (lokalt)
+
+**Use case**: UC-9 - Visa karta med närliggande lekplatser
+
+**Krav-ID:** K-9.4
+
+**Beroenden:** K-9.0, K-9.1, K-9.2, K-9.5, K-9.3
+
+**Miljö**: Lokal utvecklingsmiljö med Docker Compose
+
+**Precondition:**
+
+* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
+* Docker och Docker Compose är installerat.
+* Docker Desktop är igång
+* `Dockerfile` för både frontend och backend är korrekt konfigurerade för utvecklingsmiljö.
+* `docker-compose.yml` och` docker-compose.development.yml` finns och är korrekt konfigurerad för utvecklingsmiljö.
+
+**Verktyg**: Visual Studio Code, Webbläsaren
+
+**Indata:** \>\>\>
+
+**Steg**
+
+1. Öppna project-lekidag i Visual Studio Code.
+2. Öppna ny terminal i Visual Studio Code.
+3. Bygg och starta utvecklingsmiljön genom att köra kommandot `docker compose -f docker-compose.yml -f docker-compose.development.yml up --build` i terminalen.
+4. Besök[ http://localhost:5173](http://localhost:5173) i webbläsaren.
+5. Tillåt platsdelning.
+6. Klicka på knappen "Hitta din närmsta badplats"
+7. Klicka på textfältet i sökrutan ovanför kartan och skriv "\>\>\>"
+8. Klicka på knappen "Sök!"
+
+**Förväntat resultat:** Ett felmeddelande visas nedanför kartan "Platsen kunde inte hittas."
+
+---
+
+### TC9.6.2 - Verifiera att felmeddelande visas om position ej kan hittas (produktionsmiljö)
+
+**Use case**: UC-9 - Visa karta med närliggande lekplatser
+
+**Krav-ID:** K-9.4
+
+**Beroenden:** K-8, K-9.0, K-9.1, K-9.2, K-9.5, K-9.3
+
+**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+
+**Precondition:**
+
+* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Frontend är korrekt byggd och visas vid besök på ovanstående URL.
+* NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
+* MongoDB Atlas är ansluten
+* SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
+* Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
+* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Docker containrar är igång, bygger och kör rätt versioner.
+* Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
+
+**Verktyg**: Webbläsare
+
+**Indata:** \>\>\>
+
+**Steg**
+
+1. Besök webbsidan https://cscloud8-46.lnu.se/
+2. Tillåt platsdelning.
+3. Klicka på knappen "Hitta din närmsta badplats"
+4. Klicka på textfältet i sökrutan ovanför kartan och skriv "\>\>\>"
+5. Klicka på knappen "Sök!"
+
+**Förväntat resultat:** Ett felmeddelande visas nedanför kartan "Platsen kunde inte hittas."
