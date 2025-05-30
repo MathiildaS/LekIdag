@@ -41,6 +41,4 @@ Projektet bygger på en fullstack-arkitektur och följer till stor del en lagera
 * Applikationen containeriseras med Docker och hanteras via Docker Compose
 * NGINX för HTTPS och dirigering av trafik.
 * Driftsättning på CSCloud.
-* GitLab CI används för att köra automatiska pipelines med lint, Jest- och Supertest-tester, bygg och deploy via SSH till CSCloud. Pipelines körs vid varje push och merge request.
-
-![Skärmbild 2025-05-05 153022.png](uploads/c58afc671222b28ecc9b292a311233bc/Sk%C3%A4rmbild_2025-05-05_153022.png){width="812" height="447"}
+* GitHub actions används för att köra automatiska pipelines med lint, Jest- och Supertest-tester, bygg och deploy. Pipelines körs vid varje push och merge request.
