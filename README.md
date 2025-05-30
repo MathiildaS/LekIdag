@@ -1,14 +1,17 @@
 # LekIdag
 LekIdag är en webbapplikation för föräldrar, barnvakter och pedagoger som snabbt vill hitta åldersanpassade lekar, pyssel och utmaningar för barn samt närliggande lekplatser och badplatser baserat på användarens plats. Webbsidan visar en lokal väderprognos och erbjuder möjlighet att registrera sig som användare för att kunna dela inspiration i ett forum.
 
-## Funktioner
-- Slumpa fram lekar, pyssel och utmaningar baserat på ålder och plats (inomhus/utomhus)
-- Visa aktuell väderprognos baserat på plats från Geolocation API
-- Visa karta med närliggande lekplatser och badplatser
-- Forum för att dela tips och finna inspiration
-- Användarhantering med JWT: registrering, inloggning, uppdatering av mail och lösenord samt radering av konto.
+## Översikt
 
-## Tekniker
+### Huvudfunktioner
+- Slumpa fram lekar och pyssel baserat på ålder och plats (inomhus/utomhus).
+- Slumpa fram utmaningar med lösningsförslag baserat på ålder.
+- Visa aktuell väderprognos baserat på användarens position.
+- Visa karta med närliggande lekplatser och badplatser.
+- Forum för att dela tips och finna inspiration från andra användare.
+- Användarhantering med JWT (registrering, inloggning, uppdatering av e-post och lösenord samt borttagning av konto).
+
+### Tekniker
 - **Frontend**: Vite, Webb Komponenter, HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, MongoDB Atlas
 - **API:er**: OpenWeatherMap, Geolocation API, Overpass API, Nominatim, Leaflet och OpenStreetMap
@@ -59,7 +62,7 @@ Deploy sker manuellt via GitLab CI/CD (.gitlab-ci.yml) och SSH till servern.
 Backend körs på port 5000 och frontend serveras statiskt via NGINX på port 3000 med 
 HTTPS och omdirigering från HTTP. HTTPS-certifikat hanteras via Lets Encrypt. 
 
-# Översiktlig process
+### Översiktlig process
 1. CI/CD-pipelinen i GitLab kör deployment manuellt till CSCloud via SSH.
  
 2. Docker Compose använder docker-compose.production.yml som bygger:
@@ -86,9 +89,8 @@ Projektet använder en GitLab CI/CD-pipeline för:
 - Byggsteg för respektive Docker-image
 - Manuell deployment via SSH och Docker Compose
 
-Enhetstester och integrationstester körs med Jest och Supertest och API:er testas manuellt med Postman. 
+Enhetstester och integrationstester körs med Jest och Supertest och API:er testas även manuellt med Postman. 
 Manuella testfall finns dokumenterade.
-
 
 ## Projektstruktur och viktiga filer
 Här är en översikt över de centrala filerna i projektet:
@@ -101,7 +103,7 @@ Här är en översikt över de centrala filerna i projektet:
 - `README.md`: Dokumentation av projekt, installation, drift, licens och teknikval.
 - `LICENSE`: Licensfil (CC BY-NC 4.0) för att reglera icke-kommersiell användning.
 
-# Dokumentation
+## Dokumentation
 Projektet är väl dokumenterat med projektvision, kravspecifikation, arkitektur, testfall och tillhörande rapporter.
 README finns tillgänglig för varje del i projektet.
 
@@ -121,7 +123,6 @@ Vissa bilder i detta projekt är skapade med gratismaterial i Canva.
 De är inte avsedda för kommersiell användning. Om du återanvänder projektet, ersätt gärna dessa med egna bilder.
 
 ## Upphovsrätt
-
 © 2025 Mathilda Segerlund  
 E-post: ms228qs@student.lnu.se
 
