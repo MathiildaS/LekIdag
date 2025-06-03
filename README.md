@@ -95,7 +95,7 @@ Manuella testfall finns dokumenterade.
 ## Projektstruktur och viktiga filer
 Här är en översikt över de centrala filerna i projektet:
 
-- `.gitlab-ci.yml`: Definierar GitLab CI/CD-pipelinen för test, build och deploy
+- `.gitlab-ci.yml`: Definierar CI/CD-pipelinen för test, build och deploy
 - `docker-compose.development.yml`: Används för lokal utveckling. Startar frontend och backend i separata containrar.
 - `docker-compose.production.yml`: Används vid produktion. Bygger Docker-bilder och hanterar miljövariabler automatiskt från GitLab.
 - `Dockerfile` / `Dockerfile.production`: Bygger backend och frontend i olika miljöer. Production-versionerna är optimerade för driftsättning.
