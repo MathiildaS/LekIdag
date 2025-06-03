@@ -83,7 +83,7 @@ Backend API:
 ```
 
 ## CI/CD och testning
-Projektet använder en GitLab CI/CD-pipeline för:
+Projektet använder en GitHub Actions-pipeline för:
 
 - Lint och test av frontend och backend
 - Byggsteg för respektive Docker-image
