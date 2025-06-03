@@ -87,7 +87,7 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.PRODUCTION_HOST }} << 'EOF'
             cd /var/www/lekidag/project-lekidag &&
             git pull &&
             echo "JWT_PRIVATE_KEY=${{ secrets.JWT_PRIVATE_KEY }}" > .env &&
