@@ -1,0 +1,102 @@
+name: CI/CD Pipeline for LekIdag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install & Build frontend
+        run: |
+          cd project-lekidag-frontend
+          npm ci
+          npm run build
+
+  lint:
+    name: Lint frontend and backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Lint frontend
+        run: |
+          cd project-lekidag-frontend
+          npm ci
+          npm run lint
+
+      - name: Lint backend
+        run: |
+          cd project-lekidag-backend
+          npm ci
+          npm run lint
+
+  test:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    env:
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+      DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Run backend tests
+        run: |
+          cd project-lekidag-backend
+          npm ci
+          npm test
+
+  deploy:
+    name: Deploy to DigitalOcean VPS
+    runs-on: ubuntu-latest
+    needs: [build, lint, test]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            cd /var/www/lekidag/project-lekidag &&
+            git pull &&
+            echo "JWT_PRIVATE_KEY=${{ secrets.JWT_PRIVATE_KEY }}" > .env &&
+            echo "JWT_PUBLIC_KEY=${{ secrets.JWT_PUBLIC_KEY }}" >> .env &&
+            echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> .env &&
+            echo "OPENWEATHER_API_KEY=${{ secrets.OPENWEATHER_API_KEY }}" >> .env &&
+            echo "PORT=5000" >> .env &&
+            echo "LOG_LEVEL=info" >> .env &&
+            echo "LOGGER_MORGAN_FORMAT_ADD_REMOTE=true" >> .env &&
+            chmod 600 .env &&
+            docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
+          EOF
