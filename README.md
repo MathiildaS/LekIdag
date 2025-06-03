@@ -15,7 +15,7 @@ LekIdag är en webbapplikation för föräldrar, barnvakter och pedagoger som sn
 - **Frontend**: Vite, Webb Komponenter, HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, MongoDB Atlas
 - **API:er**: OpenWeatherMap, Geolocation API, Overpass API, Nominatim, Leaflet och OpenStreetMap
-- **CI/CD & Deploy**: GitLab CI/CD, Docker Compose, NGINX, CSCloud
+- **CI/CD & Deploy**: GitHub Actions, Docker Compose, NGINX, CSCloud
 - **Testning**: Jest (enhetstester) och Supertest (integrationstester), Postman (API-tester), manuella testfall
 
 ## Installationsguide
