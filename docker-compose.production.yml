@@ -1,4 +1,4 @@
-# Build production image with no dev dependencies
+# Build production image with no dev dependencies. docker-compose.production.yml
 services:
   backend:
     ports:

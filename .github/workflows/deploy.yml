@@ -99,10 +99,5 @@ jobs:
             echo "LOGGER_MORGAN_FORMAT_ADD_REMOTE=true" >> .env &&
             chmod 600 .env &&
 
-            cd project-lekidag-frontend &&
-            npm ci &&
-            npm run build &&
-            cd .. &&
-
             docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --build
           EOF

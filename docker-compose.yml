@@ -1,4 +1,4 @@
-# The base file.
+# The base file. docker-compose.yml
 services:
   backend:
     container_name: lekidag-backend

@@ -1,4 +1,4 @@
-# No rebuild needed when updating the src code.
+# No rebuild needed when updating the src code. docker-compose.development.yml
 services:
   backend:
     build: ./project-lekidag-backend
