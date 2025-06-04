@@ -33,8 +33,8 @@ Här sker ett tvåstegs-bygge för att skapa en optimerad produktionsversion av 
    - Kopierar `dist/` till `/usr/share/nginx/html`, en NGINX container
    - Startar NGINX-server för att leverera filerna via port 80. 
    
-Port 80 i NGINX mappas sedan till port 3000 på CSCloud via `docker-compose.production.yml`.
-Den publika trafiken hanteras av en extern NGINX-server som omdirigerar till denna port.
+Port 80 i NGINX mappas sedan till port 3000 på DigitalOcean VPS via `docker-compose.production.yml`.
+Den publika trafiken hanteras av en extern NGINX-server som omdirigerar lekidag.se till denna port.
 
 ## Webb Komponenter
 Frontend är uppdelad i modulära **Webb Komponenter** där varje komponent är isolerad med Shadow DOM och ansvarar för ett specifikt användarflöde. Komponenterna kommunicerar med backend-API via fetch-anrop och om nödvändigt med JWT-autentisering (access/refresh tokens).
