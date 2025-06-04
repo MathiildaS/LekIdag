@@ -11,6 +11,10 @@ export const sharedStyles = `
     padding: 0;
   }
 
+  body {
+  background-color: #FFF5E5;
+  }
+
   .layout-container {
     display: flex;
     flex-direction: column;
