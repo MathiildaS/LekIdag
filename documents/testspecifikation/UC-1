@@ -31,7 +31,7 @@
 
 **Precondition:**
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -67,7 +67,7 @@ Loggmeddelande som säger att anslutningen lyckades och att servern körs på [h
 
 **Precondition:**
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -109,19 +109,19 @@ Statuskod 200 och ett JSON-objekt med följande fält: title, instructions, age 
 
 **Beroenden:** K-1.1
 
-**Miljö:** Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+**Miljö:** Produktionsmiljö (DigitalOcean VPS med NGINX och Docker Compose)
 
 **Huvudscenarie:** Bli presenterad med en slumpad lek vid anrop till API med angiven ålder och plats i den driftsatta miljön.
 
 **Precondition**:
 
-* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Applikationen är driftsatt på https://lekidag.se
 * Frontend är korrekt byggd och visas vid besök på ovanstående URL.
 * NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
 * MongoDB Atlas är ansluten
 * SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
 * Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
-* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Miljövariabler är korrekt konfigurerade i GitHub CI/CD.
 * Docker containrar är igång, bygger och kör rätt versioner.
 * Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
 
@@ -135,7 +135,7 @@ Statuskod 200 och ett JSON-objekt med följande fält: title, instructions, age 
 **Steg**
 
 1. Besök Postman
-2. Skicka en GET-förfrågan till https://cscloud8-46.lnu.se/api/v1/games/random
+2. Skicka en GET-förfrågan till https://lekidag.se/api/v1/games/random
 3. Fyll i följande parametrar under fliken params:
 
    **Key:** age **Value**: 0-1
@@ -159,7 +159,7 @@ Statuskod 200 och ett JSON-objekt med följande fält: title, instructions, age 
 
 **Precondition:**
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -192,17 +192,17 @@ En lek presenteras med titel och instruktioner.
 
 **Huvudscenarie:** Bli presenterad med en slumpad lek, baserat på valda parametrar, efter tre klick.
 
-**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+**Miljö**: Produktionsmiljö (DigitalOcean VPS via NGINX och Docker Compose)
 
 **Precondition**:
 
-* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Applikationen är driftsatt på https://lekidag.se
 * Frontend är korrekt byggd och visas vid besök på ovanstående URL.
 * NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
 * MongoDB Atlas är ansluten
 * SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
 * Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
-* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Miljövariabler är korrekt konfigurerade i GitHub CI/CD.
 * Docker containrar är igång, bygger och kör rätt versioner.
 * Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
 
@@ -210,7 +210,7 @@ En lek presenteras med titel och instruktioner.
 
 **Steg**
 
-1. Besök webbsidan https://cscloud8-46.lnu.se/
+1. Besök webbsidan https://lekidag.se
 2. Klicka på knappen "Slumpa en lek" i menyn i headern.
 3. Klicka på knappen "0-1" för att välja ålder.
 4. Klicka på knappen "Inomhus" för att välja plats.
@@ -233,7 +233,7 @@ En lek presenteras med titel och instruktioner.
 
 **Precondition:**
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -267,17 +267,17 @@ En ny lek presenteras med titel och instruktioner.
 
 **Huvudscenarie:** Bli presenterad med en ny lek efter att ha blivit presenterad med en första lek.
 
-**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+**Miljö**: Produktionsmiljö (DigitalOcean VPS via NGINX och Docker Compose)
 
 **Precondition**:
 
-* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Applikationen är driftsatt på https://lekidag.se
 * Frontend är korrekt byggd och visas vid besök på ovanstående URL.
 * NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
 * MongoDB Atlas är ansluten
 * SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
 * Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
-* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Miljövariabler är korrekt konfigurerade i GitHub CI/CD.
 * Docker containrar är igång, bygger och kör rätt versioner.
 * Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
 
@@ -285,7 +285,7 @@ En ny lek presenteras med titel och instruktioner.
 
 **Steg**
 
-1. Besök webbsidan https://cscloud8-46.lnu.se/
+1. Besök webbsidan https://lekidag.se
 2. Klicka på knappen "Slumpa en lek" i menyn i headern.
 3. Klicka på knappen "0-1" för att välja ålder.
 4. Klicka på knappen "Inomhus" för att välja plats.
@@ -309,7 +309,7 @@ En ny lek presenteras med titel och instruktioner.
 
 **Precondition:**
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltiga API-nycklar.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -343,17 +343,17 @@ Alternativ att välja ålder och plats visas igen.
 
 **Huvudscenarie:** Användaren ska kunna börja om och välja nya parametrar efter att ha blivit presenterad med en lek eller direkt via knappen "Slumpa en lek" i menyn.
 
-**Miljö**: Produktionsmiljö (CSCloud via NGINX och Docker Compose)
+**Miljö**: Produktionsmiljö (DigitalOcean VPS via NGINX och Docker Compose)
 
 **Precondition**:
 
-* Applikationen är driftsatt på https://cscloud8-46.lnu.se
+* Applikationen är driftsatt på https://lekidag.se
 * Frontend är korrekt byggd och visas vid besök på ovanstående URL.
 * NGINX är korrekt konfigurerad för att skicka vidare förfrågningar till backend
 * MongoDB Atlas är ansluten
 * SSL-certifikat är aktivt och användaren når applikationen via HTTPS.
 * Frontend skickar korrekta HTTP-anrop till backend som svarar korrekt på dessa.
-* Miljövariabler är korrekt konfigurerade i GitLab CI/CD.
+* Miljövariabler är korrekt konfigurerade i GitHub CI/CD.
 * Docker containrar är igång, bygger och kör rätt versioner.
 * Senaste versionen är pushad och deployad via CI/CD-pipeline utan fel.
 
@@ -361,7 +361,7 @@ Alternativ att välja ålder och plats visas igen.
 
 **Steg**
 
-1. Besök webbsidan https://cscloud8-46.lnu.se/
+1. Besök webbsidan https://lekidag.se
 2. Klicka på knappen "Slumpa en lek" i menyn i headern.
 3. Klicka på knappen "0-1".
 4. Klicka på knappen "Inomhus"
@@ -385,7 +385,7 @@ Alternativ att välja ålder och plats visas igen.
 
 **Precondition**:
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -413,19 +413,19 @@ Testet passerar och bekräftar status kod 200 och ett JSON-objekt med fälten ti
 
 **Krav-ID:** K-1.2, K-1.3, K-1.4, K-1.5
 
-**Miljö:** CI/CD-pipeline i GitLab
+**Miljö:** CI/CD-pipeline i GitHub Actions
 
 **Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att en lek presenteras.
 
 **Precondition**:
 
-* Projektet är pushat till GitLab
-* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* Projektet är pushat till GitHub
+* CI/CD-pipeline är konfigurerad i `.github.workflows/deploy.yml`
 * `jest.config.js` och `test/`-mapp är inkluderade i repo
 * Testfall som hanterar mockning av lek i databas finns i `gamesController.test.js`.
 * Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
 
-**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js
+**Verktyg**: GitHub CI/CD, Visual Studio Code, Jest, Node.js
 
 **Steg**
 
@@ -452,7 +452,7 @@ Testet passerar och bekräftar status kod 200 och ett JSON-objekt med fälten ti
 
 **Precondition**:
 
-* Projektet är klonat från GitLab och finns lokalt.
+* Projektet är klonat från GitHub och finns lokalt.
 * Projektet är korrekt konfigurerat med .env-fil med giltig OpenWeatherMap API-nyckel.
 * Docker och Docker Compose är installerat.
 * Docker Desktop är igång
@@ -480,19 +480,19 @@ Testet passerar och bekräftar att fel hanteras korrekt. Status är 404 och resu
 
 **Krav-ID:** K-1.2, K-1.3, K-1.4, K-1.7
 
-**Miljö:** CI/CD-pipeline i GitLab
+**Miljö:** CI/CD-pipeline i GitHub
 
 **Huvudscenarie:** Pipeline kör testet som passerar och en rapport visar att rätt felmeddelande presenteras.
 
 **Precondition**:
 
-* Projektet är pushat till GitLab
-* CI/CD-pipeline är konfigurerad i `.gitlab-ci.yml`
+* Projektet är pushat till GitHub
+* CI/CD-pipeline är konfigurerad i `.github.workflows/deploy.yml`
 * `jest.config.js` och `test/`-mapp är inkluderade i repo
 * Testfall som hanterar mockning av tom databas finns i `gamesController.test.js`.
 * Pipelinesteget `backend-tests` är aktivt och kör `npm run test`
 
-**Verktyg**: GitLab CI/CD, Visual Studio Code, Jest, Node.js
+**Verktyg**: GitHub Actions, Visual Studio Code, Jest, Node.js
 
 **Steg**
 
@@ -500,7 +500,7 @@ Testet passerar och bekräftar att fel hanteras korrekt. Status är 404 och resu
 2. Öppna ny terminal i Visual Studio Code.
 3. Gör en test-ändring i koden.
 4. Commita och pusha ändringen till GitLab.
-5. Observera pipeline steget `backend-test` GitLab.
+5. Observera pipeline steget `backend-test` GitHub.
 
 **Förväntat resultat:**\
 Testet passerar och bekräftar att fel hanteras korrekt. Status är 404 och resultatet innehåller { message: "No matching game found" }.
