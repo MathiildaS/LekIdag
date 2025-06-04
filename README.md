@@ -15,7 +15,7 @@ LekIdag är en webbapplikation för föräldrar, barnvakter och pedagoger som sn
 - **Frontend**: Vite, Webb Komponenter, HTML, CSS, JavaScript
 - **Backend**: Node.js, Express, MongoDB Atlas
 - **API:er**: OpenWeatherMap, Geolocation API, Overpass API, Nominatim, Leaflet och OpenStreetMap
-- **CI/CD & Deploy**: GitHub Actions, Docker Compose, NGINX, CSCloud
+- **CI/CD & Deploy**: GitHub Actions, Docker Compose, NGINX, DigitalOcean VPS
 - **Testning**: Jest (enhetstester) och Supertest (integrationstester), Postman (API-tester), manuella testfall
 
 ## Installationsguide
@@ -24,7 +24,7 @@ Projektet använder **Docker Compose** för att starta backend och frontend i b�
 ### Lokalt med Docker Compose
 ```bash
 # Klona projektet
-git clone https://gitlab.lnu.se/1dv613/student/ms228qs/projects/project-lekidag.git
+git clone https://github.com/MathiildaS/LekIdag.git
 cd project-lekidag
 
 # Skapa .env med miljövariabler i projektets rotmapp
@@ -55,15 +55,17 @@ Backend-API körs på: http://localhost:5000
 
 ### Produktionsmiljö
 ```bash
-Applikationen är driftsatt med Docker Compose och NGINX på CSCloud:
-[https://cscloud8-46.lnu.se](https://cscloud8-46.lnu.se)
+Applikationen är driftsatt med Docker Compose och NGINX på en DigitalOcean VPS:
+[https://lekidag.se](https://lekidag.se)
 
-Deploy sker manuellt via GitLab CI/CD (.gitlab-ci.yml) och SSH till servern. 
+CI/CD via GitHub Actions med SSH anslutning till servern. 
 Backend körs på port 5000 och frontend serveras statiskt via NGINX på port 3000 med 
 HTTPS och omdirigering från HTTP. HTTPS-certifikat hanteras via Lets Encrypt. 
 
 ### Översiktlig process
-1. CI/CD-pipelinen i GitLab kör deployment manuellt till CSCloud via SSH.
+1. Pipelinen i GitHub Action kör:
+- Lint och test av frontend och backend
+- Automatisk deploy till VPS via SSH och Docker Compose
  
 2. Docker Compose använder docker-compose.production.yml som bygger:
 - Backend med Dockerfile.production
@@ -76,10 +78,10 @@ HTTPS och omdirigering från HTTP. HTTPS-certifikat hanteras via Lets Encrypt.
 5. Applikationen körs på:
 
 Frontend:
-[https://cscloud8-46.lnu.se](https://cscloud8-46.lnu.se)
+[https://lekidag.se](https://lekidag.se)
 
 Backend API:
-[https://cscloud8-46.lnu.se/api/v1](https://cscloud8-46.lnu.se/api/v1)
+[https://lekidag.se/api/v1](https://lekidag.se/api/v1)
 ```
 
 ## CI/CD och testning
@@ -87,7 +89,8 @@ Projektet använder en GitHub Actions-pipeline för:
 
 - Lint och test av frontend och backend
 - Byggsteg för respektive Docker-image
-- Manuell deployment via SSH och Docker Compose
+- Ansluter via SSH till VPS
+- Hämtar senaste versionen med git pull och bygger och startar om med Docker Compose
 
 Enhetstester och integrationstester körs med Jest och Supertest och API:er testas även manuellt med Postman. 
 Manuella testfall finns dokumenterade.
@@ -95,9 +98,9 @@ Manuella testfall finns dokumenterade.
 ## Projektstruktur och viktiga filer
 Här är en översikt över de centrala filerna i projektet:
 
-- `.gitlab-ci.yml`: Definierar CI/CD-pipelinen för test, build och deploy
+- `.github/workflows/deploy.yml`: Definierar CI/CD-pipelinen för test, build och deploy
 - `docker-compose.development.yml`: Används för lokal utveckling. Startar frontend och backend i separata containrar.
-- `docker-compose.production.yml`: Används vid produktion. Bygger Docker-bilder och hanterar miljövariabler automatiskt från GitLab.
+- `docker-compose.production.yml`: Används vid produktion. Bygger Docker-bilder och hanterar miljövariabler automatiskt.
 - `Dockerfile` / `Dockerfile.production`: Bygger backend och frontend i olika miljöer. Production-versionerna är optimerade för driftsättning.
 - `.env` (skapas lokalt): Innehåller känsliga miljövariabler för backend.
 - `README.md`: Dokumentation av projekt, installation, drift, licens och teknikval.
@@ -124,7 +127,7 @@ De är inte avsedda för kommersiell användning. Om du återanvänder projektet
 
 ## Upphovsrätt
 © 2025 Mathilda Segerlund  
-E-post: ms228qs@student.lnu.se
+E-post: mathilda.segerlund@gmail.com
 
 ---
 
