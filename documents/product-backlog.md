@@ -936,7 +936,7 @@ Här är alla de övergripande krav samlade som gäller för hela projektets str
 <td>K-8.1</td>
 <td>Driftsättningsplattform</td>
 <td>Organisationskrav</td>
-<td>Webbsidan ska driftsättas på CSCloud.</td>
+<td>Webbsidan ska driftsättas.</td>
 <td>...</td>
 <td>O-5</td>
 <td>
@@ -975,7 +975,7 @@ Här är alla de övergripande krav samlade som gäller för hela projektets str
 <td>K-8.4</td>
 <td>CI/CD GitLab</td>
 <td>Organisationskrav</td>
-<td>CI/CD-pipeline konfiguration för automatiserad testning, bygg och driftsättning i GitLab.</td>
+<td>CI/CD-pipeline konfiguration för automatiserad testning, bygg och driftsättning.</td>
 <td>K-8.1, K-8.3</td>
 <td>O-5, O-6, O-11</td>
 <td>
