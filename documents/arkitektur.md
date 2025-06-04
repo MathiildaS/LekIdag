@@ -40,5 +40,5 @@ Projektet bygger på en fullstack-arkitektur och följer till stor del en lagera
 
 * Applikationen containeriseras med Docker och hanteras via Docker Compose
 * NGINX för HTTPS och dirigering av trafik.
-* Driftsättning på CSCloud.
+* Driftsättning på DigitalOcean VPS.
 * GitHub actions används för att köra automatiska pipelines med lint, Jest- och Supertest-tester, bygg och deploy. Pipelines körs vid varje push och merge request.
