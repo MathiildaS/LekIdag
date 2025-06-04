@@ -175,7 +175,7 @@ customElements.define('crafts-element',
 
           // Add values to the elements in the shadow DOM.
           titleElement.textContent = title
-          instructionElement.textContent = instructions
+          instructionElement.innerHTML = instructions
         } else if (getTheCraft.status === 404) {
           const instructionElement = this.shadowRoot.querySelector('.instruction')
           this.showPopup('Inget pyssel hittades för det valet!')
