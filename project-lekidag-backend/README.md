@@ -11,7 +11,7 @@ Backend hanterar användarautentisering, hantering av data och datalagring, väd
   - **Overpass API / Nominatim** för platsdata (lekplatser, badplatser)
 - Loggning via **Winston** och **Morgan**
 - Testning med **Jest** + **Supertest**
-- CI/CD via GitLab
+- GitHub Actions
 
 ## Installationsguide
 ### Utan Docker (lokal utveckling)
@@ -46,7 +46,7 @@ Här sker ett tvåstegs-bygge för att skapa en optimerad produktionsversion av 
    - Startar med dumb-init och node src/server.js
    - Exponerar port 5000
 
-Detta används av docker-compose.production.yml i samband med GitLab CI/CD och deployment till CSCloud.
+Detta används av docker-compose.production.yml i samband med GitHub Actions och deployment via SSH till en DigitalOcean VPS.
 
 ### Miljövariabler
 Backend använder variabler från .env i projektets rotkatalog.
